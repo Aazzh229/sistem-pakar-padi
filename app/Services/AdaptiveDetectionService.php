@@ -31,9 +31,9 @@ class AdaptiveDetectionService
     }
 
     /**
-     * Get next symptoms based on current candidate targets.
+     * Round 2: Get exactly 1 other symptom per candidate target (disease/hama).
      */
-    public function getNextSymptoms(array $selected, array $skipped = [])
+    public function getNextSymptomsRound2(array $selected, array $skipped = [])
     {
         $selectedIds = array_keys(array_filter($selected, fn($val) => $val > 0));
 
@@ -51,7 +51,46 @@ class AdaptiveDetectionService
             return collect();
         }
 
-        // Build a query matching any of the candidate targets
+        $symptomIds = [];
+        $excludeIds = array_merge($selectedIds, $skipped);
+
+        // For each candidate target, select exactly 1 other symptom (e.g., highest pakar CF)
+        foreach ($candidateTargets as $candidate) {
+            $otherSymptom = Rule::where('target_type', $candidate->target_type)
+                ->where('target_id', $candidate->target_id)
+                ->whereNotIn('gejala_id', array_merge($excludeIds, $symptomIds))
+                ->orderBy('cf_pakar', 'desc')
+                ->first();
+
+            if ($otherSymptom) {
+                $symptomIds[] = $otherSymptom->gejala_id;
+            }
+        }
+
+        return Gejala::whereIn('id', array_unique($symptomIds))->get();
+    }
+
+    /**
+     * Round 3: Get all remaining symptoms for all candidate targets.
+     */
+    public function getNextSymptomsRound3(array $selected, array $skipped = [])
+    {
+        $selectedIds = array_keys(array_filter($selected, fn($val) => $val > 0));
+
+        if (empty($selectedIds)) {
+            return $this->getInitialSymptoms($skipped);
+        }
+
+        // Get candidate targets matching currently selected symptoms
+        $candidateTargets = Rule::select('target_type', 'target_id')
+            ->whereIn('gejala_id', $selectedIds)
+            ->groupBy('target_type', 'target_id')
+            ->get();
+
+        if ($candidateTargets->isEmpty()) {
+            return collect();
+        }
+
         $query = Rule::query();
         $query->where(function($q) use ($candidateTargets) {
             foreach ($candidateTargets as $candidate) {
@@ -62,20 +101,16 @@ class AdaptiveDetectionService
             }
         });
 
-        // Find remaining symptoms for these candidate targets
-        $symptomsData = $query->select('gejala_id', DB::raw('count(*) as freq'), DB::raw('max(cf_pakar) as max_cf'))
-            ->whereNotIn('gejala_id', array_merge($selectedIds, $skipped))
+        $excludeIds = array_merge($selectedIds, $skipped);
+        $symptomsData = $query->select('gejala_id')
+            ->whereNotIn('gejala_id', $excludeIds)
             ->groupBy('gejala_id')
-            ->orderBy('freq', 'desc')
-            ->orderBy('max_cf', 'desc')
-            ->limit(4)
             ->get();
 
         $ids = $symptomsData->pluck('gejala_id')->toArray();
-        return Gejala::whereIn('id', $ids)
-            ->get()
-            ->sortBy(fn($g) => array_search($g->id, $ids));
+        return Gejala::whereIn('id', $ids)->get();
     }
+
 
     /**
      * Diagnose selected symptoms and store in history.

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PakarController extends Controller
 {
@@ -118,4 +119,99 @@ class PakarController extends Controller
 
         return redirect()->route('pakar.dashboard')->with('success', 'Akun Petani berhasil dibuat.');
     }
+
+    public function showInputGejala()
+    {
+        // Sugest kode gejala
+        $lastGejala = Gejala::orderBy('kode_gejala', 'desc')->first();
+        $suggestedCode = 'G01';
+        if ($lastGejala && preg_match('/G(\d+)/', $lastGejala->kode_gejala, $matches)) {
+            $num = (int)$matches[1] + 1;
+            $suggestedCode = 'G' . str_pad($num, 2, '0', STR_PAD_LEFT);
+        }
+        return view('pakar.gejala.create', compact('suggestedCode'));
+    }
+
+    public function storeGejala(Request $request)
+    {
+        $request->validate([
+            'kode_gejala' => 'required|string|unique:gejala,kode_gejala',
+            'nama_gejala' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        Gejala::create([
+            'kode_gejala' => strtoupper($request->kode_gejala),
+            'nama_gejala' => $request->nama_gejala,
+            'kategori' => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'created_by' => Auth::id()
+        ]);
+
+        return redirect()->route('pakar.dashboard')->with('success', 'Gejala Baru berhasil ditambahkan.');
+    }
+
+    public function showInputPenyakit()
+    {
+        // Sugest kode penyakit
+        $lastPenyakit = Penyakit::orderBy('kode_penyakit', 'desc')->first();
+        $suggestedCode = 'P01';
+        if ($lastPenyakit && preg_match('/P(\d+)/', $lastPenyakit->kode_penyakit, $matches)) {
+            $num = (int)$matches[1] + 1;
+            $suggestedCode = 'P' . str_pad($num, 2, '0', STR_PAD_LEFT);
+        }
+        return view('pakar.penyakit.create', compact('suggestedCode'));
+    }
+
+    public function storePenyakit(Request $request)
+    {
+        $request->validate([
+            'kode_penyakit' => 'required|string|unique:penyakit,kode_penyakit',
+            'nama_penyakit' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        Penyakit::create([
+            'kode_penyakit' => strtoupper($request->kode_penyakit),
+            'nama_penyakit' => $request->nama_penyakit,
+            'slug' => Str::slug($request->nama_penyakit),
+            'deskripsi' => $request->deskripsi,
+            'created_by' => Auth::id()
+        ]);
+
+        return redirect()->route('pakar.dashboard')->with('success', 'Penyakit Baru berhasil ditambahkan.');
+    }
+
+    public function showInputHama()
+    {
+        // Sugest kode hama
+        $lastHama = Hama::orderBy('kode_hama', 'desc')->first();
+        $suggestedCode = 'H01';
+        if ($lastHama && preg_match('/H(\d+)/', $lastHama->kode_hama, $matches)) {
+            $num = (int)$matches[1] + 1;
+            $suggestedCode = 'H' . str_pad($num, 2, '0', STR_PAD_LEFT);
+        }
+        return view('pakar.hama.create', compact('suggestedCode'));
+    }
+
+    public function storeHama(Request $request)
+    {
+        $request->validate([
+            'kode_hama' => 'required|string|unique:hama,kode_hama',
+            'nama_hama' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        Hama::create([
+            'kode_hama' => strtoupper($request->kode_hama),
+            'nama_hama' => $request->nama_hama,
+            'slug' => Str::slug($request->nama_hama),
+            'deskripsi' => $request->deskripsi,
+            'created_by' => Auth::id()
+        ]);
+
+        return redirect()->route('pakar.dashboard')->with('success', 'Hama Baru berhasil ditambahkan.');
+    }
 }
+

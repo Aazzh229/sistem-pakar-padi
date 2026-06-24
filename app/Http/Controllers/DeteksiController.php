@@ -25,6 +25,7 @@ class DeteksiController extends Controller
     public function start(Request $request)
     {
         $request->session()->forget(['selected_symptoms', 'skipped_symptoms']);
+        $request->session()->put('deteksi_round', 1);
         return redirect()->route('deteksi.wizard');
     }
 
@@ -32,24 +33,33 @@ class DeteksiController extends Controller
     {
         $selected = session('selected_symptoms', []);
         $skipped = session('skipped_symptoms', []);
+        $round = session('deteksi_round', 1);
         
         $selectedCount = count(array_filter($selected, fn($val) => $val > 0));
 
-        if ($selectedCount >= 3) {
+        if ($round > 3) {
             return redirect()->route('deteksi.result');
         }
 
-        if (empty($selected)) {
+        if ($round == 1) {
             $symptoms = $this->detectionService->getInitialSymptoms($skipped);
+        } elseif ($round == 2) {
+            $symptoms = $this->detectionService->getNextSymptomsRound2($selected, $skipped);
         } else {
-            $symptoms = $this->detectionService->getNextSymptoms($selected, $skipped);
-            
-            if ($symptoms->isEmpty() && $selectedCount >= 1) {
+            $symptoms = $this->detectionService->getNextSymptomsRound3($selected, $skipped);
+        }
+
+        // If no symptoms found for the current round, advance round automatically
+        if ($symptoms->isEmpty()) {
+            if ($round < 3) {
+                $request->session()->put('deteksi_round', $round + 1);
+                return redirect()->route('deteksi.wizard');
+            } else {
                 return redirect()->route('deteksi.result');
             }
         }
 
-        return view('deteksi.wizard', compact('symptoms', 'selected', 'selectedCount'));
+        return view('deteksi.wizard', compact('symptoms', 'selected', 'selectedCount', 'round'));
     }
 
     public function processStep(Request $request)
@@ -66,9 +76,13 @@ class DeteksiController extends Controller
 
         session(['selected_symptoms' => $selected]);
 
-        if ($request->has('diagnose') || count(array_filter($selected, fn($val) => $val > 0)) >= 3) {
+        if ($request->has('diagnose')) {
             return redirect()->route('deteksi.result');
         }
+
+        // Advance to next round
+        $round = session('deteksi_round', 1);
+        session(['deteksi_round' => $round + 1]);
 
         return redirect()->route('deteksi.wizard');
     }
@@ -85,6 +99,11 @@ class DeteksiController extends Controller
         }
 
         session(['skipped_symptoms' => $skipped]);
+        
+        // Advance to next round
+        $round = session('deteksi_round', 1);
+        session(['deteksi_round' => $round + 1]);
+
         return redirect()->route('deteksi.wizard');
     }
 

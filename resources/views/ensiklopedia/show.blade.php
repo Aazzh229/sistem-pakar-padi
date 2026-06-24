@@ -89,7 +89,7 @@
                 <span class="w-1 h-4 bg-[#0E4E37] rounded-full"></span>
                 Solusi Penanganan (Rekomendasi Pakar)
             </h3>
-            <p class="text-xs text-neutral-600 leading-relaxed font-light">{{ $item->solusi ?: 'Silakan konsultasikan ke petugas penyuluh pertanian setempat.' }}</p>
+            <div class="text-xs text-neutral-600 leading-relaxed font-light whitespace-pre-line">{!! preg_replace('/\*\*(.+?)\*\*/', '<strong class="font-semibold text-neutral-800">$1</strong>', nl2br(e($item->solusi ?: 'Silakan konsultasikan ke petugas penyuluh pertanian setempat.'))) !!}</div>
         </div>
 
         <!-- Pencegahan -->
@@ -102,7 +102,7 @@
                 </svg>
                 Tindakan Pencegahan
             </h3>
-            <p class="text-xs text-[#1D4733] leading-relaxed font-light">{{ $item->pencegahan }}</p>
+            <div class="text-xs text-[#1D4733] leading-relaxed font-light whitespace-pre-line">{!! preg_replace('/\*\*(.+?)\*\*/', '<strong class="font-semibold">$1</strong>', nl2br(e($item->pencegahan))) !!}</div>
         </div>
         @endif
 

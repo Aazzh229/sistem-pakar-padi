@@ -7,13 +7,19 @@
     <!-- Header -->
     <div class="bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] px-6 pt-8 pb-10 text-white relative">
         <div class="flex justify-between items-center mb-2">
-            <h1 class="text-xl font-bold">Diagnosa Gejala</h1>
+            <h1 class="text-xl font-bold">Diagnosa Gejala (Ronde {{ $round }} / 3)</h1>
             <span class="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full">
-                {{ $selectedCount }} / 3 Terpilih
+                {{ $selectedCount }} Terpilih
             </span>
         </div>
         <p class="text-white/80 text-xs font-light">
-            Pilih gejala yang dialami tanaman padi Anda pada daftar di bawah ini.
+            @if($round == 1)
+                Pilih gejala awal yang paling umum muncul pada tanaman padi Anda.
+            @elseif($round == 2)
+                Pilih gejala lanjutan yang terkait dengan dugaan hama/penyakit padi Anda.
+            @else
+                Pilih gejala sisa lainnya untuk mempresisikan hasil analisa certainty factor.
+            @endif
         </p>
     </div>
 
@@ -63,16 +69,14 @@
             <!-- Bottom Control Buttons -->
             <div class="flex flex-col gap-3 mt-4">
                 
-                @if($selectedCount >= 1)
-                    <button type="submit" name="diagnose" value="1" 
-                            class="w-full bg-[#0E4E37] hover:bg-[#12583F] text-white text-sm font-bold py-3.5 rounded-full shadow-md transition flex items-center justify-center gap-2"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Lihat Hasil Diagnosa ({{ $selectedCount }} Gejala)
-                    </button>
-                @endif
+                <button type="submit" name="diagnose" value="1" id="btn-diagnose"
+                        class="{{ $selectedCount >= 1 ? '' : 'hidden' }} w-full bg-[#0E4E37] hover:bg-[#12583F] text-white text-sm font-bold py-3.5 rounded-full shadow-md transition flex items-center justify-center gap-2"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span id="btn-diagnose-text">Lihat Hasil Diagnosa ({{ $selectedCount }} Gejala)</span>
+                </button>
 
                 @if(!$symptoms->isEmpty())
                     <button type="submit" 
@@ -117,4 +121,39 @@
 
 @section('navigation')
     <x-bottom-nav active="deteksi" />
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selects = document.querySelectorAll('select[name^="symptoms"]');
+        const btnDiagnose = document.getElementById('btn-diagnose');
+        const btnDiagnoseText = document.getElementById('btn-diagnose-text');
+        const initialSelectedCount = {{ $selectedCount }};
+
+        function updateDiagnoseButton() {
+            let currentSelected = 0;
+            selects.forEach(select => {
+                if (parseFloat(select.value) > 0) {
+                    currentSelected++;
+                }
+            });
+
+            const totalSelected = initialSelectedCount + currentSelected;
+            if (totalSelected >= 1) {
+                btnDiagnose.classList.remove('hidden');
+                btnDiagnoseText.textContent = `Lihat Hasil Diagnosa (${totalSelected} Gejala)`;
+            } else {
+                btnDiagnose.classList.add('hidden');
+            }
+        }
+
+        selects.forEach(select => {
+            select.addEventListener('change', updateDiagnoseButton);
+        });
+
+        // Run once on load to ensure state is correct
+        updateDiagnoseButton();
+    });
+</script>
 @endsection

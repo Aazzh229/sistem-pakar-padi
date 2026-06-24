@@ -47,6 +47,15 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/pakar/library/create', [PakarController::class, 'showInputLibrary'])->name('pakar.library.create');
         Route::post('/pakar/library', [PakarController::class, 'storeLibrary'])->name('pakar.library.store');
+
+        Route::get('/pakar/gejala/create', [PakarController::class, 'showInputGejala'])->name('pakar.gejala.create');
+        Route::post('/pakar/gejala', [PakarController::class, 'storeGejala'])->name('pakar.gejala.store');
+
+        Route::get('/pakar/penyakit/create', [PakarController::class, 'showInputPenyakit'])->name('pakar.penyakit.create');
+        Route::post('/pakar/penyakit', [PakarController::class, 'storePenyakit'])->name('pakar.penyakit.store');
+
+        Route::get('/pakar/hama/create', [PakarController::class, 'showInputHama'])->name('pakar.hama.create');
+        Route::post('/pakar/hama', [PakarController::class, 'storeHama'])->name('pakar.hama.store');
         
     });
 

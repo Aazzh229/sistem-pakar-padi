@@ -58,7 +58,12 @@
 
                 <!-- Dropdown Penyakit -->
                 <div id="penyakit-wrapper">
-                    <label class="text-xs font-semibold text-neutral-600 mb-1.5 block">Nama Penyakit</label>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="text-xs font-semibold text-neutral-600 block">Nama Penyakit</label>
+                        <a href="{{ route('pakar.penyakit.create') }}" class="text-[10px] text-[#0E4E37] font-bold hover:underline flex items-center gap-0.5">
+                            + Tambah Penyakit Baru
+                        </a>
+                    </div>
                     <select name="target_id_penyakit" id="target_penyakit"
                             class="w-full bg-neutral-50 border border-neutral-200 text-sm rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
                         @foreach($penyakit as $p)
@@ -69,7 +74,12 @@
 
                 <!-- Dropdown Hama (hidden by default) -->
                 <div id="hama-wrapper" class="hidden">
-                    <label class="text-xs font-semibold text-neutral-600 mb-1.5 block">Nama Hama</label>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="text-xs font-semibold text-neutral-600 block">Nama Hama</label>
+                        <a href="{{ route('pakar.hama.create') }}" class="text-[10px] text-[#0E4E37] font-bold hover:underline flex items-center gap-0.5">
+                            + Tambah Hama Baru
+                        </a>
+                    </div>
                     <select name="target_id_hama" id="target_hama"
                             class="w-full bg-neutral-50 border border-neutral-200 text-sm rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
                         @foreach($hama as $h)
@@ -83,10 +93,15 @@
 
             <!-- BAGIAN 2: Tambah Gejala -->
             <div class="bg-white p-5 rounded-2xl border border-neutral-100 shadow-md">
-                <h2 class="text-sm font-bold text-neutral-800 mb-1 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-[#E2F2EB] text-[#0A3D2A] rounded-full flex items-center justify-center text-xs font-black">2</span>
-                    Tambahkan Gejala
-                </h2>
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-sm font-bold text-neutral-800 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-[#E2F2EB] text-[#0A3D2A] rounded-full flex items-center justify-center text-xs font-black">2</span>
+                        Tambahkan Gejala
+                    </h2>
+                    <a href="{{ route('pakar.gejala.create') }}" class="text-[10px] text-[#0E4E37] font-bold hover:underline flex items-center gap-0.5">
+                        + Tambah Gejala Baru
+                    </a>
+                </div>
                 <p class="text-[10px] text-neutral-400 font-light mb-4 ml-8">Minimal 1, maksimal 3 gejala. Nilai CF Pakar: 0.1 – 1.0</p>
 
                 <!-- Gejala Rows Container -->
