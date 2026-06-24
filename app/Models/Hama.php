@@ -11,11 +11,18 @@ class Hama extends Model
     protected $fillable = [
         'kode_hama',
         'nama_hama',
-        'slug'
+        'slug',
+        'deskripsi',
+        'created_by'
     ];
 
     public function rules()
     {
         return $this->morphMany(Rule::class, 'target');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }

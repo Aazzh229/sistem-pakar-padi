@@ -28,7 +28,8 @@ Route::middleware(['auth'])->group(function () {
         
         // Deteksi
         Route::get('/deteksi', [DeteksiController::class, 'index'])->name('deteksi.index');
-        Route::post('/deteksi/start', [DeteksiController::class, 'start'])->name('deteksi.start');
+        Route::get('/deteksi/start', [DeteksiController::class, 'start'])->name('deteksi.start');
+        Route::post('/deteksi/start', [DeteksiController::class, 'start']);
         Route::get('/deteksi/wizard', [DeteksiController::class, 'wizard'])->name('deteksi.wizard');
         Route::post('/deteksi/wizard', [DeteksiController::class, 'processStep'])->name('deteksi.wizard.process');
         Route::get('/deteksi/next-symptoms', [DeteksiController::class, 'nextSymptoms'])->name('deteksi.next-symptoms');

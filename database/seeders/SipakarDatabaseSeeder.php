@@ -86,17 +86,18 @@ class SipakarDatabaseSeeder extends Seeder
                 'kode_gejala' => $gd[0],
                 'nama_gejala' => $gd[1],
                 'kategori' => $gd[2],
-                'deskripsi' => $gd[3]
+                'deskripsi' => $gd[3],
+                'created_by' => $pakar->id
             ]);
         }
 
         // 3. Seed Penyakit
         $penyakitData = [
-            ['P01', 'Blast Padi'],
-            ['P03', 'Tungro'],
-            ['P04', 'Hawar Daun Bakteri'],
-            ['P05', 'Bercak Coklat'],
-            ['P07', 'Busuk Pelepah']
+            ['P01', 'Blast Padi', 'Penyakit jamur Pyricularia oryzae yang menyerang daun dan leher malai padi.'],
+            ['P03', 'Tungro', 'Penyakit virus yang ditularkan oleh wereng hijau, menyebabkan tanaman kerdil.'],
+            ['P04', 'Hawar Daun Bakteri', 'Penyakit bakteri Xanthomonas oryzae yang ditandai dengan gejala kresek atau hawar daun.'],
+            ['P05', 'Bercak Coklat', 'Penyakit jamur Helminthosporium oryzae yang menimbulkan bercak coklat pada daun.'],
+            ['P07', 'Busuk Pelepah', 'Penyakit jamur Rhizoctonia solani yang menyerang pelepah daun padi.']
         ];
 
         $penyakitModels = [];
@@ -104,17 +105,19 @@ class SipakarDatabaseSeeder extends Seeder
             $penyakitModels[$pd[0]] = Penyakit::create([
                 'kode_penyakit' => $pd[0],
                 'nama_penyakit' => $pd[1],
-                'slug' => Str::slug($pd[1])
+                'slug' => Str::slug($pd[1]),
+                'deskripsi' => $pd[2],
+                'created_by' => $pakar->id
             ]);
         }
 
         // 4. Seed Hama
         $hamaData = [
-            ['H01', 'Tikus Sawah'],
-            ['H02', 'Wereng Coklat'],
-            ['H03', 'Penggerek Batang'],
-            ['H05', 'Keong Mas'],
-            ['H07', 'Walang Sangit']
+            ['H01', 'Tikus Sawah', 'Hama pengerat Rattus argentiventer yang memotong rumpun batang padi.'],
+            ['H02', 'Wereng Coklat', 'Hama Nilaparvata lugens yang menghisap cairan batang dan menyebabkan hopperburn.'],
+            ['H03', 'Penggerek Batang', 'Hama ulat penggerek batang (sundep pada vegetatif, beluk pada generatif).'],
+            ['H05', 'Keong Mas', 'Hama siput Pomacea canaliculata yang memakan tanaman padi muda di sawah tergenang.'],
+            ['H07', 'Walang Sangit', 'Hama Leptocorisa oratorius yang menghisap bulir padi fase masak susu.']
         ];
 
         $hamaModels = [];
@@ -122,7 +125,9 @@ class SipakarDatabaseSeeder extends Seeder
             $hamaModels[$hd[0]] = Hama::create([
                 'kode_hama' => $hd[0],
                 'nama_hama' => $hd[1],
-                'slug' => Str::slug($hd[1])
+                'slug' => Str::slug($hd[1]),
+                'deskripsi' => $hd[2],
+                'created_by' => $pakar->id
             ]);
         }
 
@@ -175,25 +180,25 @@ class SipakarDatabaseSeeder extends Seeder
         Rule::create(['gejala_id' => $gejalaModels['G27']->id, 'target_type' => 'hama', 'target_id' => $hamaModels['H07']->id, 'cf_pakar' => 0.85, 'created_by' => $pakar->id]);
         Rule::create(['gejala_id' => $gejalaModels['G06']->id, 'target_type' => 'hama', 'target_id' => $hamaModels['H07']->id, 'cf_pakar' => 0.75, 'created_by' => $pakar->id]);
 
-        // 6. Seed Library
+        // 6. Seed Library (Default Initializer)
         $libraryData = [
             [
                 'jenis' => 'penyakit',
                 'nama' => 'Blast Padi',
                 'nama_latin' => 'Pyricularia oryzae',
-                'deskripsi' => 'Penyakit jamur yang menyerang daun, batang, dan malai padi.',
+                'deskripsi' => 'Penyakit jamur yang menyerang daun, pelepah, dan malai padi.',
                 'penyebab' => 'Jamur Pyricularia oryzae',
-                'solusi' => 'Gunakan varietas tahan penyakit, kurangi pemakaian pupuk nitrogen berlebih, dan semprot fungisida berbahan aktif trisiklazol bila intensitas serangan tinggi.',
-                'pencegahan' => 'Pengaturan jarak tanam legowo dan pembersihan sisa-sisa jerami padi yang terinfeksi.',
+                'solusi' => 'Gunakan varietas tahan penyakit, kurangi pemakaian pupuk nitrogen berlebih, dan semprot fungisida.',
+                'pencegahan' => 'Pengaturan jarak tanam legowo dan pembersihan sisa-sisa jerami padi.',
                 'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'penyakit',
                 'nama' => 'Tungro',
-                'nama_latin' => 'Rice tungro bacilliform virus',
-                'deskripsi' => 'Penyakit virus yang ditularkan oleh wereng hijau, menyebabkan tanaman padi kerdil dan daun berwarna kuning jingga.',
-                'penyebab' => 'Virus Tungro (RTBV dan RTSV)',
-                'solusi' => 'Kendalikan vektor wereng hijau dengan insektisida sistemik dan musnahkan tanaman yang terinfeksi berat.',
+                'nama_latin' => 'Rice tungro virus',
+                'deskripsi' => 'Penyakit virus ditularkan oleh wereng hijau, menyebabkan tanaman kerdil dan daun kuning jingga.',
+                'penyebab' => 'Virus Tungro (RTBV dan RTSV) ditularkan oleh Wereng Hijau',
+                'solusi' => 'Kendalikan vektor wereng hijau dengan insektisida sistemik dan cabut tanaman sakit.',
                 'pencegahan' => 'Tanam serempak untuk memutus siklus hidup wereng hijau.',
                 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400&auto=format&fit=crop&q=80'
             ],
@@ -201,19 +206,19 @@ class SipakarDatabaseSeeder extends Seeder
                 'jenis' => 'penyakit',
                 'nama' => 'Hawar Daun Bakteri',
                 'nama_latin' => 'Xanthomonas oryzae pv. oryzae',
-                'deskripsi' => 'Penyakit bakteri yang menyerang daun padi, ditandai dengan garis basah pada helai daun yang mengering seperti terbakar.',
+                'deskripsi' => 'Penyakit bakteri menyerang daun padi, ditandai garis basah kekuningan yang mengering.',
                 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae',
-                'solusi' => 'Kurangi pengairan berlebih, hindari pemupukan N yang berlebih, dan aplikasikan bakterisida.',
-                'pencegahan' => 'Gunakan varietas tahan seperti Inpari, dan gunakan sistem pengairan berselang (intermittent).',
+                'solusi' => 'Kurangi pengairan berlebih, hindari pupuk N berlebih, dan semprot bakterisida.',
+                'pencegahan' => 'Gunakan varietas tahan seperti Inpari dan pengairan berselang.',
                 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'penyakit',
                 'nama' => 'Bercak Coklat',
                 'nama_latin' => 'Helminthosporium oryzae',
-                'deskripsi' => 'Infeksi jamur yang menyebabkan bercak oval berwarna coklat pada permukaan daun padi.',
-                'penyebab' => 'Jamur Helminthosporium oryzae',
-                'solusi' => 'Berikan pupuk kalium (K) yang cukup, lakukan pemupukan berimbang, dan gunakan fungisida jika diperlukan.',
+                'deskripsi' => 'Infeksi jamur menyebabkan bercak oval coklat di permukaan daun padi.',
+                'penyebab' => 'Jamur Helminthosporium oryzae / Bipolaris oryzae',
+                'solusi' => 'Berikan pupuk kalium cukup, pemupukan berimbang, dan fungisida.',
                 'pencegahan' => 'Perbaiki drainase tanah dan gunakan benih bebas patogen.',
                 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400&auto=format&fit=crop&q=80'
             ],
@@ -221,9 +226,9 @@ class SipakarDatabaseSeeder extends Seeder
                 'jenis' => 'penyakit',
                 'nama' => 'Busuk Pelepah',
                 'nama_latin' => 'Rhizoctonia solani',
-                'deskripsi' => 'Penyakit jamur yang merusak pelepah daun padi, ditandai dengan bercak bulat tidak beraturan berwarna abu-abu kehijauan.',
+                'deskripsi' => 'Penyakit jamur merusak pelepah daun padi, ditandai bercak abu-abu kehijauan tidak beraturan.',
                 'penyebab' => 'Jamur Rhizoctonia solani',
-                'solusi' => 'Kurangi pemakaian pupuk N berlebih, perbaiki drainase sawah, dan semprot fungisida berbahan aktif dipenokonazol jika parah.',
+                'solusi' => 'Kurangi pupuk N berlebih, perbaiki drainase sawah, dan semprot fungisida.',
                 'pencegahan' => 'Lakukan sanitasi gulma di sekitar sawah dan atur jarak tanam.',
                 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
             ],
@@ -231,56 +236,210 @@ class SipakarDatabaseSeeder extends Seeder
                 'jenis' => 'hama',
                 'nama' => 'Tikus Sawah',
                 'nama_latin' => 'Rattus argentiventer',
-                'deskripsi' => 'Hama pengerat yang merusak tanaman padi pada semua fase pertumbuhan dengan memotong batang padi.',
+                'deskripsi' => 'Hama pengerat merusak padi pada semua fase tumbuh dengan memotong pangkal batang.',
                 'penyebab' => 'Tikus Sawah (Rattus argentiventer)',
-                'solusi' => 'Lakukan gropyokan massal, pasang TBS (Trap Barrier System), atau gunakan rodentisida.',
-                'pencegahan' => 'Pembersihan semak-semak dan tanggul sawah agar tidak menjadi sarang tikus.',
+                'solusi' => 'Gropyokan massal, pasang Trap Barrier System (TBS), dan rodentisida.',
+                'pencegahan' => 'Pembersihan pematang dan tanggul sawah agar tidak jadi sarang.',
                 'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'hama',
                 'nama' => 'Wereng Coklat',
                 'nama_latin' => 'Nilaparvata lugens',
-                'deskripsi' => 'Hama penghisap cairan batang padi yang paling merusak, menyebabkan tanaman mengering kecoklatan (hopperburn).',
+                'deskripsi' => 'Hama penghisap cairan batang menyebabkan padi cepat menguning dan kering (hopperburn).',
                 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)',
-                'solusi' => 'Gunakan musuh alami seperti laba-laba, semprot insektisida berbahan aktif pymetrozine jika populasi ambang batas terlampaui.',
-                'pencegahan' => 'Hindari penggunaan insektisida spektrum luas di awal musim tanam.',
+                'solusi' => 'Gunakan agens hayati, semprot insektisida pymetrozine jika populasi tinggi.',
+                'pencegahan' => 'Jarak tanam legowo dan hindari insektisida spektrum luas di awal musim.',
                 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'hama',
                 'nama' => 'Penggerek Batang',
                 'nama_latin' => 'Scirpophaga innotata',
-                'deskripsi' => 'Larva ngengat penggerek batang padi yang menyerang pada fase vegetatif menyebabkan anakan mati (sundep).',
-                'penyebab' => 'Ulat Penggerek Batang Padi (Scirpophaga innotata / incertulas)',
-                'solusi' => 'Kumpulkan telur penggerek di lapangan, pasang perangkap lampu (light trap), semprot insektisida sistemik.',
-                'pencegahan' => 'Tanam serentak dan lakukan pembajakan tanah sawah setelah panen untuk membunuh larva di jerami.',
-                'gambar' => 'placeholder'
+                'deskripsi' => 'Larva ngengat menyerang batang menimbulkan kematian tunas (sundep) atau malai hampa (beluk).',
+                'penyebab' => 'Ulat Penggerek Batang Padi (Scirpophaga spp.)',
+                'solusi' => 'Kumpulkan kelompok telur, gunakan light trap, dan insektisida sistemik.',
+                'pencegahan' => 'Tanam serempak dan pembajakan tanah pasca panen.',
+                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'hama',
                 'nama' => 'Keong Mas',
                 'nama_latin' => 'Pomacea canaliculata',
-                'deskripsi' => 'Siput air tawar yang memakan tunas-tunas padi muda yang baru ditanam pada sawah yang tergenang.',
+                'deskripsi' => 'Siput air tawar memakan batang dan daun muda tanaman padi yang baru ditanam.',
                 'penyebab' => 'Keong Mas (Pomacea canaliculata)',
-                'solusi' => 'Kumpulkan keong secara manual, buat parit kecil di keliling petakan sawah, atau taburkan moluskisida.',
-                'pencegahan' => 'Pasang saringan pada pintu air masuk sawah agar bayi keong tidak masuk.',
+                'solusi' => 'Kumpulkan keong manual, atur pintu air, atau taburkan moluskisida.',
+                'pencegahan' => 'Pasang saringan kawat pada pintu air irigasi masuk sawah.',
                 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
             ],
             [
                 'jenis' => 'hama',
                 'nama' => 'Walang Sangit',
                 'nama_latin' => 'Leptocorisa oratorius',
-                'deskripsi' => 'Serangga penghisap bulir padi muda (fase masak susu) yang mengeluarkan bau busuk menyengat.',
+                'deskripsi' => 'Serangga penghisap bulir padi fase masak susu menimbulkan bulir hampa dan bernoda.',
                 'penyebab' => 'Walang Sangit (Leptocorisa oratorius)',
-                'solusi' => 'Semprot insektisida kontak di pagi hari ketika walang sangit berkumpul di bagian atas tanaman.',
-                'pencegahan' => 'Bersihkan rumput-rumput liar di pematang sawah yang menjadi inang alternatif.',
+                'solusi' => 'Semprot insektisida kontak di pagi/sore hari saat serangga aktif.',
+                'pencegahan' => 'Sanitasi gulma pematang sawah yang menjadi inang alternatif.',
                 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
             ]
         ];
 
+        // Seed initial library items
         foreach ($libraryData as $ld) {
             Library::create(array_merge($ld, ['created_by' => $pakar->id]));
+        }
+
+        // 7. Parse Excel file & update / append library database
+        $excelPath = base_path('Tabel_Solusi_PHT_Sederhana versi diisi semua.xlsx');
+        if (file_exists($excelPath)) {
+            $zip = new \ZipArchive();
+            if ($zip->open($excelPath) === TRUE) {
+                // Read Shared Strings
+                $sharedStrings = [];
+                $sharedStringsEntry = $zip->getFromName('xl/sharedStrings.xml');
+                if ($sharedStringsEntry) {
+                    $xmlStrings = simplexml_load_string($sharedStringsEntry);
+                    foreach ($xmlStrings->si as $si) {
+                        if (isset($si->t)) {
+                            $sharedStrings[] = (string)$si->t;
+                        } else {
+                            $text = '';
+                            foreach ($si->r as $r) {
+                                $text .= (string)$r->t;
+                            }
+                            $sharedStrings[] = $text;
+                        }
+                    }
+                }
+
+                // Read Sheet1
+                $sheet1Entry = $zip->getFromName('xl/worksheets/sheet1.xml');
+                if ($sheet1Entry) {
+                    $xmlSheet = simplexml_load_string($sheet1Entry);
+                    
+                    // Mapping Excel rows
+                    $excelMapping = [
+                        'Penyakit Blast Daun' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400'],
+                        'Penyakit Blast Leher (Neck Blast)' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400'],
+                        'Hama Tikus' => ['jenis' => 'hama', 'nama' => 'Tikus Sawah', 'nama_latin' => 'Rattus argentiventer', 'penyebab' => 'Tikus Sawah (Rattus argentiventer)', 'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400'],
+                        'Hama Wereng Coklat' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
+                        'Penyakit Tungro' => ['jenis' => 'penyakit', 'nama' => 'Tungro', 'nama_latin' => 'Rice tungro virus', 'penyebab' => 'Virus Tungro (RTBV dan RTSV)', 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400'],
+                        'Hama Sundep (Penggerek Batang Fase Vegetatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Hama Beluk (Penggerek Batang Fase Generatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Hama Keong Mas' => ['jenis' => 'hama', 'nama' => 'Keong Mas', 'nama_latin' => 'Pomacea canaliculata', 'penyebab' => 'Keong Mas (Pomacea canaliculata)', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Hawar Daun Bakteri (HDB) / Kresek' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Hama Putih / Ulat Daun' => ['jenis' => 'hama', 'nama' => 'Hama Putih / Ulat Daun', 'nama_latin' => 'Nymphula depunctalis', 'penyebab' => 'Ulat daun / Hama putih (Nymphula depunctalis)', 'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400'],
+                        'Hama Walang Sangit' => ['jenis' => 'hama', 'nama' => 'Walang Sangit', 'nama_latin' => 'Leptocorisa oratorius', 'penyebab' => 'Walang Sangit (Leptocorisa oratorius)', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Penyakit Bercak Coklat' => ['jenis' => 'penyakit', 'nama' => 'Bercak Coklat', 'nama_latin' => 'Bipolaris oryzae', 'penyebab' => 'Jamur Bipolaris oryzae', 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400'],
+                        'Hama Ganjur' => ['jenis' => 'hama', 'nama' => 'Hama Ganjur', 'nama_latin' => 'Orseolia oryzae', 'penyebab' => 'Tabuhan Ganjur (Orseolia oryzae)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
+                        'Serangan Hama Wereng Berat (Puso)' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
+                        'HDB Fase Lanjut' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                    ];
+
+                    foreach ($xmlSheet->sheetData->row as $row) {
+                        $rowIndex = (int)$row['r'];
+                        if ($rowIndex < 6) continue;
+
+                        $rowData = [];
+                        foreach ($row->c as $c) {
+                            $r = (string)$c['r'];
+                            $col = preg_replace('/[0-9]/', '', $r);
+                            $val = '';
+                            if (isset($c->v)) {
+                                $val = (string)$c->v;
+                                if (isset($c['t']) && (string)$c['t'] === 's') {
+                                    $val = $sharedStrings[(int)$val] ?? '';
+                                }
+                            }
+                            $rowData[$col] = trim($val);
+                        }
+
+                        $excelName = $rowData['C'] ?? '';
+                        $phtText = $rowData['D'] ?? '';
+
+                        if (empty($excelName) || empty($phtText) || !isset($excelMapping[$excelName])) {
+                            continue;
+                        }
+
+                        $mapping = $excelMapping[$excelName];
+                        
+                        // Simple keyword-based parsing of PHT solution text
+                        $solusiKeywords = ['Kultur Teknis', 'Hayati', 'Kimiawi', 'Mekanis', 
+                            'Fisik', 'Nabati', 'Pemupukan', 'Pengelolaan Air', 
+                            'Pengendalian Vektor', 'Kuratif kimiawi', 'Tindakan Kuratif',
+                            'Manajemen Nutrisi', 'Kimiawi (Tindakan Penahanan)'];
+                        $pencegahanKeywords = ['Preventif', 'Profilaksis', 'Sanitasi'];
+                        
+                        // Collect all lines
+                        $lines = explode("\n", $phtText);
+                        $solusiLines = [];
+                        $pencegahanLines = [];
+                        $descLines = [];
+                        
+                        foreach ($lines as $line) {
+                            $trimmed = trim($line);
+                            if (empty($trimmed)) continue;
+                            
+                            $isPencegahan = false;
+                            foreach ($pencegahanKeywords as $kw) {
+                                if (stripos($trimmed, $kw . ':') === 0) {
+                                    $isPencegahan = true;
+                                    break;
+                                }
+                            }
+                            
+                            if ($isPencegahan) {
+                                $pencegahanLines[] = $trimmed;
+                            } elseif (stripos($trimmed, 'Konteks:') === 0) {
+                                $descLines[] = $trimmed;
+                            } else {
+                                $solusiLines[] = $trimmed;
+                            }
+                        }
+
+                        $parsedSolusi = implode("\n", $solusiLines);
+                        $parsedPencegahan = implode("\n", $pencegahanLines);
+                        $parsedDesc = implode("\n", $descLines);
+
+
+                        // Find existing Library item
+                        $libraryItem = Library::where('jenis', $mapping['jenis'])
+                            ->where('nama', $mapping['nama'])
+                            ->first();
+
+                        if ($libraryItem) {
+                            $existingSolusi = $libraryItem->solusi;
+                            $existingPencegahan = $libraryItem->pencegahan;
+                            
+                            if (strpos($existingSolusi, $excelName) === false) {
+                                $updatedSolusi = $existingSolusi . "\n\n**Pengendalian (" . $excelName . "):**\n" . $parsedSolusi;
+                                $updatedPencegahan = $existingPencegahan;
+                                if (!empty($parsedPencegahan)) {
+                                    $updatedPencegahan = $existingPencegahan . "\n\n**Pencegahan (" . $excelName . "):**\n" . $parsedPencegahan;
+                                }
+                                
+                                $libraryItem->update([
+                                    'solusi' => $updatedSolusi,
+                                    'pencegahan' => $updatedPencegahan,
+                                ]);
+                            }
+                        } else {
+                            Library::create([
+                                'jenis' => $mapping['jenis'],
+                                'nama' => $mapping['nama'],
+                                'nama_latin' => $mapping['nama_latin'],
+                                'deskripsi' => $parsedDesc ?: 'Edukasi dan solusi PHT untuk ' . $mapping['nama'],
+                                'penyebab' => $mapping['penyebab'],
+                                'solusi' => $parsedSolusi,
+                                'pencegahan' => $parsedPencegahan ?: 'Lakukan sanitasi lingkungan secara teratur.',
+                                'gambar' => $mapping['gambar'],
+                                'created_by' => $pakar->id
+                            ]);
+                        }
+                    }
+                }
+                $zip->close();
+            }
         }
     }
 }

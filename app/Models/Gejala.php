@@ -12,11 +12,17 @@ class Gejala extends Model
         'kode_gejala',
         'nama_gejala',
         'kategori',
-        'deskripsi'
+        'deskripsi',
+        'created_by'
     ];
 
     public function rules()
     {
         return $this->hasMany(Rule::class, 'gejala_id', 'id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
