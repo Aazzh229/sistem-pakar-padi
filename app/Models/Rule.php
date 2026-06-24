@@ -8,37 +8,26 @@ class Rule extends Model
 {
     protected $table = 'rules';
 
-    protected $primaryKey = 'kode_rule';
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
-    public $timestamps = false;
-
     protected $fillable = [
-        'kode_rule',
-        'kode_diagnosa',
-        'cf_rule'
+        'gejala_id',
+        'target_type',
+        'target_id',
+        'cf_pakar',
+        'created_by'
     ];
 
-    public function diagnosa()
+    public function gejala()
     {
-        return $this->belongsTo(
-            Diagnosa::class,
-            'kode_diagnosa',
-            'kode_diagnosa'
-        );
+        return $this->belongsTo(Gejala::class, 'gejala_id', 'id');
     }
 
-    public function details()
+    public function target()
     {
-        return $this->hasMany(
-            RuleDetail::class,
-            'kode_rule',
-            'kode_rule'
-        );
+        return $this->morphTo();
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
-
-

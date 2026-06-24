@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RuleDetail extends Model
 {
-    protected $table = 'rule_detail';
-
-    protected $primaryKey = 'id';
-
-    public $timestamps = false;
+    protec $timestamps = false;
 
     protected $fillable = [
         'kode_rule',
@@ -18,7 +14,11 @@ class RuleDetail extends Model
     ];
 
     public function rule()
-    {
+    {ted $table = 'rule_detail';
+
+    protected $primaryKey = 'id';
+
+    public
         return $this->belongsTo(
             Rule::class,
             'kode_rule',

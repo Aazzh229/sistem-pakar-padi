@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Gejala extends Model
+class Penyakit extends Model
 {
-    protected $table = 'gejala';
+    protected $table = 'penyakit';
 
     protected $fillable = [
-        'kode_gejala',
-        'nama_gejala',
-        'kategori',
+        'kode_penyakit',
+        'nama_penyakit',
+        'slug',
         'deskripsi',
         'created_by'
     ];
 
     public function rules()
     {
-        return $this->hasMany(Rule::class, 'gejala_id', 'id');
+        return $this->morphMany(Rule::class, 'target');
     }
 
     public function creator()

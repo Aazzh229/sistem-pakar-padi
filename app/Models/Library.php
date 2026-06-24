@@ -4,22 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Gejala extends Model
+class Library extends Model
 {
-    protected $table = 'gejala';
+    protected $table = 'library';
 
     protected $fillable = [
-        'kode_gejala',
-        'nama_gejala',
-        'kategori',
+        'jenis',
+        'nama',
+        'nama_latin',
         'deskripsi',
+        'penyebab',
+        'solusi',
+        'pencegahan',
+        'gambar',
         'created_by'
     ];
-
-    public function rules()
-    {
-        return $this->hasMany(Rule::class, 'gejala_id', 'id');
-    }
 
     public function creator()
     {
