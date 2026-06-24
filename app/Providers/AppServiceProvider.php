@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Database\Eloquent\Relations\Relation::morphMap([
+            'penyakit' => \App\Models\Penyakit::class,
+            'hama' => \App\Models\Hama::class,
+        ]);
     }
 }

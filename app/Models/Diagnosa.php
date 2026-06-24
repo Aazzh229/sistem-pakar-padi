@@ -19,7 +19,13 @@ class Diagnosa extends Model
     protected $fillable = [
         'kode_diagnosa',
         'nama_diagnosa',
-        'tipe'
+        'nama_latin',
+        'tipe',
+        'deskripsi',
+        'solusi',
+        'penyebab',
+        'pencegahan',
+        'gambar'
     ];
 
     public function rules()

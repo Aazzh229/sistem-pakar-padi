@@ -8,16 +8,15 @@ class Gejala extends Model
 {
     protected $table = 'gejala';
 
-    protected $primaryKey = 'kode_gejala';
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
-    public $timestamps = false;
-
     protected $fillable = [
         'kode_gejala',
-        'nama_gejala'
+        'nama_gejala',
+        'kategori',
+        'deskripsi'
     ];
+
+    public function rules()
+    {
+        return $this->hasMany(Rule::class, 'gejala_id', 'id');
+    }
 }
