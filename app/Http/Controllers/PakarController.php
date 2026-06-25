@@ -15,6 +15,27 @@ use Illuminate\Support\Str;
 
 class PakarController extends Controller
 {
+    public function indexRules()
+{
+    $rules = Rule::with(['gejala', 'target'])->get();
+    $gejala = Gejala::all();
+    $penyakit = Penyakit::all();
+    $hama = Hama::all();
+
+    return view('pakar.rules.index', compact(
+        'rules',
+        'gejala',
+        'penyakit',
+        'hama'
+    ));
+}
+
+public function indexLibrary()
+{
+    $libraries = Library::orderBy('nama')->get();
+
+    return view('pakar.library.index', compact('libraries'));
+}
     public function dashboard()
     {
         return view('pakar.dashboard');
