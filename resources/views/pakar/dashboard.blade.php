@@ -94,7 +94,7 @@
         <!-- Client View Redirect -->
         <div class="border-t border-neutral-200 pt-5 mt-2 flex flex-col gap-3">
             <a href="{{ route('beranda') }}" class="w-full text-center bg-[#0E4E37] hover:bg-[#12583F] text-white text-xs font-bold py-3.5 rounded-full transition shadow-md">
-                Buka Deteksi & Ensiklopedia (Tampilan Petani)
+                Beranda
             </a>
         </div>
 

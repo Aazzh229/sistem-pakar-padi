@@ -92,41 +92,19 @@
                         </label>
 
                         <!-- Certainty Option (Expands when checked) -->
-                        <div id="cf-container-{{ $g->id }}" class="hidden overflow-hidden border-t border-neutral-100 pt-3.5 flex flex-col gap-2.5">
-                            <div class="flex justify-between items-center">
-                                <label class="text-[11px] font-bold text-neutral-500">Tingkat Keyakinan Gejala</label>
-                                <span id="cf-val-label-{{ $g->id }}" class="text-[10px] text-[#0E4E37] font-extrabold bg-[#E2F2EB] px-2.5 py-1 rounded-md">0.0</span>
-                            </div>
-                            
-                            <!-- Slider bar -->
-                            <div class="flex gap-3 items-center">
-                                <input
-                                    type="range"
-                                    id="slider-{{ $g->id }}"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                    value="0"
-                                    data-id="{{ $g->id }}"
-                                    class="w-full accent-[#0E4E37] h-1.5 bg-neutral-100 rounded-lg cursor-pointer symptom-slider"
-                                >
-                                <input
-                                    type="hidden"
-                                    name="symptoms[{{ $g->id }}]"
-                                    id="input-{{ $g->id }}"
-                                    value="0"
-                                    class="symptom-cf-value"
-                                >
-                            </div>
-                            
-                            <!-- Quick Preset Selector Pills -->
-                            <div class="grid grid-cols-5 gap-1.5 mt-1">
-                                <button type="button" data-val="0.2" data-id="{{ $g->id }}" class="cf-preset text-[9px] font-bold py-2 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition">0.2</button>
-                                <button type="button" data-val="0.4" data-id="{{ $g->id }}" class="cf-preset text-[9px] font-bold py-2 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition">0.4</button>
-                                <button type="button" data-val="0.6" data-id="{{ $g->id }}" class="cf-preset text-[9px] font-bold py-2 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition">0.6</button>
-                                <button type="button" data-val="0.8" data-id="{{ $g->id }}" class="cf-preset text-[9px] font-bold py-2 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition">0.8</button>
-                                <button type="button" data-val="1.0" data-id="{{ $g->id }}" class="cf-preset text-[9px] font-bold py-2 bg-neutral-50 text-neutral-500 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition">1.0</button>
-                            </div>
+                        <div id="cf-container-{{ $g->id }}" class="hidden overflow-hidden border-t border-neutral-100 pt-3.5 flex flex-col gap-1.5">
+                            <label for="input-{{ $g->id }}" class="text-xs font-bold text-neutral-700">Bobot CF Pakar (0.1 s/d 1.0)</label>
+                            <input
+                                type="number"
+                                name="symptoms[{{ $g->id }}]"
+                                id="input-{{ $g->id }}"
+                                min="0.1"
+                                max="1.0"
+                                step="0.1"
+                                value="0.8"
+                                disabled
+                                class="w-full bg-neutral-50 border border-neutral-200 text-sm rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#0E4E37] focus:bg-white transition-all symptom-cf-value"
+                            >
                         </div>
                     </div>
                 @empty
@@ -174,21 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnDiagnose = document.getElementById('btn-diagnose');
     const btnDiagnoseText = document.getElementById('btn-diagnose-text');
     const checkboxes = document.querySelectorAll('.symptom-checkbox');
-    const sliders = document.querySelectorAll('.symptom-slider');
-    const presets = document.querySelectorAll('.cf-preset');
 
     let activeCategory = 'semua';
     let searchQuery = '';
-
-    // CF Value Helper Text Map
-    function getCfText(val) {
-        if (val <= 0) return '0.0 (Tidak tahu)';
-        if (val <= 0.2) return '0.2 (Kurang yakin)';
-        if (val <= 0.4) return '0.4 (Cukup yakin)';
-        if (val <= 0.6) return '0.6 (Yakin)';
-        if (val <= 0.8) return '0.8 (Sangat yakin)';
-        return '1.0 (Pasti)';
-    }
 
     // Update Counter and Submit Button States
     function updateState() {
@@ -260,99 +226,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const id = chk.getAttribute('data-id');
             const container = document.getElementById(`cf-container-${id}`);
             const input = document.getElementById(`input-${id}`);
-            const slider = document.getElementById(`slider-${id}`);
-            const label = document.getElementById(`cf-val-label-${id}`);
 
             if (chk.checked) {
                 // Show container
                 container.classList.remove('hidden');
-                // Set default value to 1.0 (Pasti) when checked
-                input.value = "1.0";
-                slider.value = "1";
-                label.innerText = getCfText(1.0);
-                
-                // Highlight the 1.0 preset button
-                const presetsInCard = container.querySelectorAll('.cf-preset');
-                presetsInCard.forEach(p => {
-                    if (p.getAttribute('data-val') === "1.0") {
-                        p.classList.remove('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                        p.classList.add('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                    } else {
-                        p.classList.add('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                        p.classList.remove('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                    }
-                });
+                // Enable input
+                input.removeAttribute('disabled');
+                // Set default value if empty
+                if (!input.value || input.value == "0") {
+                    input.value = "0.8";
+                }
             } else {
                 // Hide container
                 container.classList.add('hidden');
-                // Reset value
-                input.value = "0";
-                slider.value = "0";
-                label.innerText = getCfText(0);
-                
-                // Clear preset buttons highlight
-                const presetsInCard = container.querySelectorAll('.cf-preset');
-                presetsInCard.forEach(p => {
-                    p.classList.add('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                    p.classList.remove('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                });
+                // Disable input so it's not submitted
+                input.setAttribute('disabled', 'true');
             }
             updateState();
-        });
-    });
-
-    // 4. Slider Listener
-    sliders.forEach(slider => {
-        slider.addEventListener('input', function () {
-            const id = slider.getAttribute('data-id');
-            const input = document.getElementById(`input-${id}`);
-            const label = document.getElementById(`cf-val-label-${id}`);
-            const val = parseFloat(slider.value).toFixed(1);
-
-            input.value = val;
-            label.innerText = getCfText(val);
-
-            // Update active preset button highlight
-            const container = document.getElementById(`cf-container-${id}`);
-            const presetsInCard = container.querySelectorAll('.cf-preset');
-            presetsInCard.forEach(p => {
-                const presetVal = parseFloat(p.getAttribute('data-val')).toFixed(1);
-                if (presetVal === val) {
-                    p.classList.remove('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                    p.classList.add('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                } else {
-                    p.classList.add('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                    p.classList.remove('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                }
-            });
-        });
-    });
-
-    // 5. Preset Buttons Listener
-    presets.forEach(p => {
-        p.addEventListener('click', function () {
-            const id = p.getAttribute('data-id');
-            const val = p.getAttribute('data-val');
-            const input = document.getElementById(`input-${id}`);
-            const slider = document.getElementById(`slider-${id}`);
-            const label = document.getElementById(`cf-val-label-${id}`);
-
-            input.value = val;
-            slider.value = val;
-            label.innerText = getCfText(val);
-
-            // Toggle active style in this card only
-            const container = document.getElementById(`cf-container-${id}`);
-            const presetsInCard = container.querySelectorAll('.cf-preset');
-            presetsInCard.forEach(btn => {
-                if (btn === p) {
-                    btn.classList.remove('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                    btn.classList.add('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                } else {
-                    btn.classList.add('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                    btn.classList.remove('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                }
-            });
         });
     });
 
@@ -364,22 +254,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 chk_{{ $sId }}.checked = true;
                 const container = document.getElementById('cf-container-{{ $sId }}');
                 const input = document.getElementById('input-{{ $sId }}');
-                const slider = document.getElementById('slider-{{ $sId }}');
-                const label = document.getElementById('cf-val-label-{{ $sId }}');
                 
                 container.classList.remove('hidden');
+                input.removeAttribute('disabled');
                 input.value = "{{ $cfVal }}";
-                slider.value = "{{ $cfVal }}";
-                label.innerText = getCfText({{ $cfVal }});
-
-                // Highlight correct preset
-                const presetsInCard = container.querySelectorAll('.cf-preset');
-                presetsInCard.forEach(p => {
-                    if (p.getAttribute('data-val') === "{{ $cfVal }}") {
-                        p.classList.remove('bg-neutral-50', 'text-neutral-500', 'border-neutral-200');
-                        p.classList.add('bg-[#0E4E37]', 'text-white', 'border-[#0E4E37]');
-                    }
-                });
             }
         @endforeach
         updateState();

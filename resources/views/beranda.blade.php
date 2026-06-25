@@ -144,68 +144,7 @@
         </a>
     </div>
 
-    @if(Auth::user()->role === 'pakar' || Auth::user()->role === 'admin')
-    <!-- PANEL PAKAR -->
-    <div class="mt-6 flex flex-col">
-        <div class="px-6 flex items-center mb-4">
-            <div class="w-1.5 h-6 bg-[#0E4E37] rounded-full mr-2"></div>
-            <h2 class="text-xl font-bold text-neutral-800">Panel Pakar / Admin</h2>
-        </div>
-        <div class="grid grid-cols-2 gap-4 px-6">
-            <!-- Tambah Rule -->
-            <a href="{{ route('pakar.rules.create') }}" class="bg-white border border-neutral-100 p-4 rounded-2xl shadow-md hover:bg-neutral-50 transition flex flex-col justify-between h-[125px]">
-                <div class="bg-[#E2F2EB] text-[#0A3D2A] p-2 rounded-xl w-fit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-xs leading-snug">Petakan Rule</h3>
-                    <p class="text-[9px] text-neutral-400 font-light mt-0.5 leading-tight">Hubungkan gejala ke target hama/penyakit</p>
-                </div>
-            </a>
-            
-            <!-- Tambah Artikel -->
-            <a href="{{ route('pakar.library.create') }}" class="bg-white border border-neutral-100 p-4 rounded-2xl shadow-md hover:bg-neutral-50 transition flex flex-col justify-between h-[125px]">
-                <div class="bg-[#FDECE8] text-[#D85C30] p-2 rounded-xl w-fit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-xs leading-snug">Tambah Artikel</h3>
-                    <p class="text-[9px] text-neutral-400 font-light mt-0.5 leading-tight">Input ensiklopedia hama & penyakit baru</p>
-                </div>
-            </a>
 
-            <!-- Tambah Gejala Baru -->
-            <a href="{{ route('pakar.gejala.create') }}" class="bg-white border border-neutral-100 p-4 rounded-2xl shadow-md hover:bg-neutral-50 transition flex flex-col justify-between h-[125px]">
-                <div class="bg-blue-50 text-blue-700 p-2 rounded-xl w-fit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-xs leading-snug">Gejala Baru</h3>
-                    <p class="text-[9px] text-neutral-400 font-light mt-0.5 leading-tight">Input data gejala baru ke database</p>
-                </div>
-            </a>
-
-            <!-- Dashboard Pakar -->
-            <a href="{{ route('pakar.dashboard') }}" class="bg-white border border-neutral-100 p-4 rounded-2xl shadow-md hover:bg-neutral-50 transition flex flex-col justify-between h-[125px]">
-                <div class="bg-amber-50 text-amber-700 p-2 rounded-xl w-fit">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-xs leading-snug">Dashboard Pakar</h3>
-                    <p class="text-[9px] text-neutral-400 font-light mt-0.5 leading-tight">Kelola semua data inputan pakar</p>
-                </div>
-            </a>
-        </div>
-    </div>
-    @endif
 
 
     <!-- SECTION PENYAKIT PADI -->
