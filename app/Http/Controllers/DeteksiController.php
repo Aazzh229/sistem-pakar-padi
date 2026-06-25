@@ -25,47 +25,22 @@ class DeteksiController extends Controller
     public function start(Request $request)
     {
         $request->session()->forget(['selected_symptoms', 'skipped_symptoms']);
-        $request->session()->put('deteksi_round', 1);
         return redirect()->route('deteksi.wizard');
     }
 
     public function wizard(Request $request)
     {
         $selected = session('selected_symptoms', []);
-        $skipped = session('skipped_symptoms', []);
-        $round = session('deteksi_round', 1);
-        
+        $symptoms = Gejala::orderBy('kode_gejala')->get();
         $selectedCount = count(array_filter($selected, fn($val) => $val > 0));
 
-        if ($round > 3) {
-            return redirect()->route('deteksi.result');
-        }
-
-        if ($round == 1) {
-            $symptoms = $this->detectionService->getInitialSymptoms($skipped);
-        } elseif ($round == 2) {
-            $symptoms = $this->detectionService->getNextSymptomsRound2($selected, $skipped);
-        } else {
-            $symptoms = $this->detectionService->getNextSymptomsRound3($selected, $skipped);
-        }
-
-        // If no symptoms found for the current round, advance round automatically
-        if ($symptoms->isEmpty()) {
-            if ($round < 3) {
-                $request->session()->put('deteksi_round', $round + 1);
-                return redirect()->route('deteksi.wizard');
-            } else {
-                return redirect()->route('deteksi.result');
-            }
-        }
-
-        return view('deteksi.wizard', compact('symptoms', 'selected', 'selectedCount', 'round'));
+        return view('deteksi.wizard', compact('symptoms', 'selected', 'selectedCount'));
     }
 
     public function processStep(Request $request)
     {
-        $selected = session('selected_symptoms', []);
         $inputSymptoms = $request->input('symptoms', []);
+        $selected = [];
 
         foreach ($inputSymptoms as $id => $cf) {
             $cfVal = (float)$cf;
@@ -76,34 +51,11 @@ class DeteksiController extends Controller
 
         session(['selected_symptoms' => $selected]);
 
-        if ($request->has('diagnose')) {
-            return redirect()->route('deteksi.result');
-        }
-
-        // Advance to next round
-        $round = session('deteksi_round', 1);
-        session(['deteksi_round' => $round + 1]);
-
-        return redirect()->route('deteksi.wizard');
+        return redirect()->route('deteksi.result');
     }
 
     public function nextSymptoms(Request $request)
     {
-        $skipped = session('skipped_symptoms', []);
-        $currentIds = $request->input('current_ids', []);
-
-        foreach ($currentIds as $id) {
-            if (!in_array($id, $skipped)) {
-                $skipped[] = (int)$id;
-            }
-        }
-
-        session(['skipped_symptoms' => $skipped]);
-        
-        // Advance to next round
-        $round = session('deteksi_round', 1);
-        session(['deteksi_round' => $round + 1]);
-
         return redirect()->route('deteksi.wizard');
     }
 

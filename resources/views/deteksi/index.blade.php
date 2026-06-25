@@ -6,7 +6,15 @@
 <div class="flex flex-col w-full text-neutral-800">
     <!-- Header -->
     <div class="bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] px-6 pt-8 pb-10 text-white relative">
-        <h1 class="text-2xl font-bold">Deteksi Sistem Pakar</h1>
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold">Deteksi Sistem Pakar</h1>
+            @if(Auth::check() && (Auth::user()->role === 'pakar' || Auth::user()->role === 'admin'))
+                <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('pakar.dashboard') }}" 
+                   class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition">
+                    Dashboard
+                </a>
+            @endif
+        </div>
         <p class="text-white/80 text-xs mt-1.5 font-light">
             Identifikasi hama dan penyakit tanaman padi menggunakan metode Certainty Factor.
         </p>
@@ -30,21 +38,21 @@
             
             <h2 class="text-base font-bold text-neutral-800 mb-2">Petunjuk Diagnosa</h2>
             <p class="text-xs text-neutral-500 leading-relaxed font-light mb-6 max-w-xs">
-                Sistem akan menampilkan gejala secara bertahap (adaptif). Pilih gejala yang terlihat pada padi Anda dan tentukan tingkat keyakinan Anda.
+                Pilih semua gejala yang tampak pada tanaman padi Anda dari daftar lengkap, kemudian tentukan tingkat keyakinan Anda.
             </p>
 
             <div class="w-full flex flex-col gap-3 text-left mb-6">
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">1</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Pilih tingkat keyakinan gejala pada daftar yang ditampilkan.</p>
+                    <p class="text-xs text-neutral-600 leading-normal font-light">Cari dan pilih gejala pada daftar (bisa dicari atau difilter berdasarkan kategori).</p>
                 </div>
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">2</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Tekan tombol "Next Gejala" jika daftar gejala saat ini tidak ada yang cocok.</p>
+                    <p class="text-xs text-neutral-600 leading-normal font-light">Tentukan tingkat keyakinan (0.1 s/d 1.0) untuk masing-masing gejala yang dipilih.</p>
                 </div>
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">3</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Masukkan minimal 1 gejala dan maksimal 3 gejala untuk mendapatkan hasil diagnosa pakar.</p>
+                    <p class="text-xs text-neutral-600 leading-normal font-light">Tekan tombol "Mulai Analisa Diagnosa" untuk melihat hasil analisis Certainty Factor.</p>
                 </div>
             </div>
 

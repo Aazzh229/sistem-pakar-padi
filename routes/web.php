@@ -46,20 +46,23 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:pakar,admin'])->group(function () {
         Route::get('/pakar', [PakarController::class, 'dashboard'])->name('pakar.dashboard');
         
+        Route::get('/pakar/master/create', [PakarController::class, 'showInputMaster'])->name('pakar.master.create');
+        Route::post('/pakar/master', [PakarController::class, 'storeMaster'])->name('pakar.master.store');
+
         Route::get('/pakar/rules/create', [PakarController::class, 'showInputRules'])->name('pakar.rules.create');
         Route::post('/pakar/rules', [PakarController::class, 'storeRules'])->name('pakar.rules.store');
         
         Route::get('/pakar/library/create', [PakarController::class, 'showInputLibrary'])->name('pakar.library.create');
         Route::post('/pakar/library', [PakarController::class, 'storeLibrary'])->name('pakar.library.store');
 
-        Route::get('/pakar/gejala/create', [PakarController::class, 'showInputGejala'])->name('pakar.gejala.create');
-        Route::post('/pakar/gejala', [PakarController::class, 'storeGejala'])->name('pakar.gejala.store');
+        Route::get('/pakar/gejala/create', [PakarController::class, 'showInputMaster'])->name('pakar.gejala.create');
+        Route::post('/pakar/gejala', [PakarController::class, 'storeMaster'])->name('pakar.gejala.store');
 
-        Route::get('/pakar/penyakit/create', [PakarController::class, 'showInputPenyakit'])->name('pakar.penyakit.create');
-        Route::post('/pakar/penyakit', [PakarController::class, 'storePenyakit'])->name('pakar.penyakit.store');
+        Route::get('/pakar/penyakit/create', [PakarController::class, 'showInputMaster'])->name('pakar.penyakit.create');
+        Route::post('/pakar/penyakit', [PakarController::class, 'storeMaster'])->name('pakar.penyakit.store');
 
-        Route::get('/pakar/hama/create', [PakarController::class, 'showInputHama'])->name('pakar.hama.create');
-        Route::post('/pakar/hama', [PakarController::class, 'storeHama'])->name('pakar.hama.store');
+        Route::get('/pakar/hama/create', [PakarController::class, 'showInputMaster'])->name('pakar.hama.create');
+        Route::post('/pakar/hama', [PakarController::class, 'storeMaster'])->name('pakar.hama.store');
         
     });
 

@@ -21,7 +21,7 @@ class AdaptiveDetectionService
             ->groupBy('gejala_id')
             ->orderBy('freq', 'desc')
             ->orderBy('max_cf', 'desc')
-            ->limit(4)
+            ->limit(1)
             ->get();
 
         $ids = $symptomsData->pluck('gejala_id')->toArray();
@@ -67,7 +67,10 @@ class AdaptiveDetectionService
             }
         }
 
-        return Gejala::whereIn('id', array_unique($symptomIds))->get();
+        // Return only the first symptom to show one per round
+        $uniqueIds = array_unique($symptomIds);
+        $firstId = reset($uniqueIds);
+        return $firstId ? Gejala::where('id', $firstId)->get() : collect();
     }
 
     /**
@@ -108,7 +111,9 @@ class AdaptiveDetectionService
             ->get();
 
         $ids = $symptomsData->pluck('gejala_id')->toArray();
-        return Gejala::whereIn('id', $ids)->get();
+        // Return only the first symptom
+        $firstId = reset($ids);
+        return $firstId ? Gejala::where('id', $firstId)->get() : collect();
     }
 
 

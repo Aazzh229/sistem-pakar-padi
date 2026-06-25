@@ -6,13 +6,22 @@
 <div class="flex flex-col w-full text-neutral-800">
     <!-- Header with Back Button -->
     <div class="bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] px-6 pt-8 pb-10 text-white relative">
-        <div class="flex items-center gap-2 mb-4">
-            <a href="{{ route('ensiklopedia.index') }}" class="text-white/80 hover:text-white transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <h1 class="text-xl font-bold">Detail Informasi</h1>
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+                <a href="{{ route('ensiklopedia.index') }}" class="text-white/80 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                <h1 class="text-xl font-bold">Detail Informasi</h1>
+            </div>
+            
+            @if(Auth::check() && (Auth::user()->role === 'pakar' || Auth::user()->role === 'admin'))
+                <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('pakar.dashboard') }}" 
+                   class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition">
+                    Dashboard
+                </a>
+            @endif
         </div>
         
         <span class="inline-block {{ $item->jenis === 'penyakit' ? 'bg-white/20' : 'bg-orange-500/20' }} text-white text-[10px] font-bold px-3 py-1 rounded-full mb-2">
