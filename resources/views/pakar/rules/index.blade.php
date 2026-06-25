@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Basis Pengetahuan Rules - SiPakar Padi')
+@section('title', 'Kelola Basis Pengetahuan - Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">
@@ -12,7 +12,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </a>
-            <h1 class="text-xl font-bold">Kelola Basis Pengetahuan CF</h1>
+            <h1 class="text-xl font-bold">Kelola Basis Pengetahuan</h1>
         </div>
         <div class="flex justify-between items-center">
             <p class="text-white/80 text-xs font-light">Kelola gejala, hama dan penyakit</p>
@@ -32,10 +32,6 @@
 
             <button id="btn-target" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
                 Penyakit / Hama
-            </button>
-
-            <button id="btn-rule" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
-                Rule
             </button>
 
         </div>
@@ -107,45 +103,16 @@
 
                     </div>
                 </div>
-
-    <!-- Rules List Cards -->
-    <div id="section-rule" class="hidden px-6 mt-6">
-        @foreach($rules as $rule)
-            @php
-                $target = $rule->target;
-                $isPenyakit = $rule->target_type === 'penyakit';
-                $badgeBg = $isPenyakit ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-orange-50 text-orange-700 border-orange-200';
-            @endphp
-            <div class="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex flex-col gap-2.5">
-                <div class="flex justify-between items-start">
-                    <div class="min-w-0 flex-grow pr-2">
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider {{ $badgeBg }}">
-                            {{ $isPenyakit ? 'Penyakit' : 'Hama' }}
-                        </span>
-                        <h3 class="font-bold text-neutral-800 text-sm mt-1 truncate leading-tight">
-                            {{ $isPenyakit ? $target->nama_penyakit : $target->nama_hama }}
-                        </h3>
-                    </div>
-                    <!-- CF Badge -->
-                    <div class="text-right">
-                        <span class="text-xs font-black text-[#0E4E37] block bg-[#E2F2EB] px-2 py-0.5 rounded-full">CF: {{ $rule->cf_pakar }}</span>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
 </div>
 <script>
 const btnGejala = document.getElementById('btn-gejala');
 const btnTarget = document.getElementById('btn-target');
-const btnRule = document.getElementById('btn-rule');
 
 const sectionGejala = document.getElementById('section-gejala');
 const sectionTarget = document.getElementById('section-target');
-const sectionRule = document.getElementById('section-rule');
 
 function aktifkan(button){
-    [btnGejala, btnTarget, btnRule].forEach(btn=>{
+    [btnGejala, btnTarget].forEach(btn=>{
         btn.style.backgroundColor="white";
         btn.style.color="#525252";
         btn.style.border="1px solid #e5e5e5";
@@ -160,7 +127,6 @@ function showSection(section,button){
 
     sectionGejala.classList.add("hidden");
     sectionTarget.classList.add("hidden");
-    sectionRule.classList.add("hidden");
 
     section.classList.remove("hidden");
 
@@ -173,10 +139,6 @@ btnGejala.addEventListener("click",()=>{
 
 btnTarget.addEventListener("click",()=>{
     showSection(sectionTarget,btnTarget);
-});
-
-btnRule.addEventListener("click",()=>{
-    showSection(sectionRule,btnRule);
 });
 
 showSection(sectionGejala,btnGejala);

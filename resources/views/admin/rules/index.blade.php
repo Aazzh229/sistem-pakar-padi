@@ -1,151 +1,81 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Basis Pengetahuan Rules - SiPakar Padi')
+@section('title', 'Kelola Basis Pengetahuan - Padiku')
 
 @section('content')
-<div class="flex flex-col w-full text-neutral-800">
-    <!-- Header -->
-    <div class="bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] px-6 pt-8 pb-10 text-white relative">
-        <div class="flex items-center gap-2 mb-4">
-            <a href="{{ route('admin.dashboard') }}" class="text-white/80 hover:text-white transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <h1 class="text-xl font-bold">Kelola Basis Pengetahuan CF</h1>
+<div class="space-y-6">
+    <section class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-6 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+        <div>
+            <a href="{{ route('admin.dashboard') }}" class="text-sm font-bold text-[#0E4E37] hover:underline">Dashboard</a>
+            <h1 class="mt-2 text-3xl font-black text-neutral-900">Kelola Basis Pengetahuan</h1>
+            <p class="mt-2 text-sm text-neutral-500">Kelola gejala, hama dan penyakit.</p>
         </div>
-        <div class="flex justify-between items-center">
-            <p class="text-white/80 text-xs font-light">Kelola gejala, hama dan penyakit</p>
-            <a href="{{ route('admin.rules.create') }}" class="bg-[#3CD070] text-[#0A3D2A] text-xs font-bold px-3.5 py-1.5 rounded-full transition shadow-sm">
-                + Tambah Data
-            </a>
-        </div>
-    </div>
-    
-    <!-- Kategori -->
-    <div class="px-6 -mt-3 relative z-10">
-        <div class="flex gap-2 overflow-x-auto pb-1">
+        <a href="{{ route('admin.rules.create') }}" class="inline-flex items-center justify-center rounded-lg bg-[#0E4E37] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#12583F]">
+            + Tambah Data
+        </a>
+    </section>
 
-            <button id="btn-gejala" class="px-4 py-2 rounded-full bg-[#0E4E37] text-white text-xs font-bold whitespace-nowrap">
-                Gejala
-            </button>
-
-            <button id="btn-target" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
-                Penyakit / Hama
-            </button>
-
-            <button id="btn-rule" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
-                Rule
-            </button>
-
-        </div>
-    </div>
-
-    <!-- Alert Success -->
     @if(session('success'))
-        <div class="mx-6 mt-4 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-medium">
+        <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-800">
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Gejala -->
-    <div id="section-gejala" class="px-6 mt-6">
-        <h2 class="text-sm font-bold text-neutral-700 mb-3">Gejala</h2>
-                    <div class="flex flex-col gap-3">
-                        @foreach($gejala as $g)
-                            <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
-                                <div>
-                                    <span class="text-[10px] font-bold text-[#0E4E37]">{{ $g->kode_gejala }}</span>
-                                    <p class="text-sm text-neutral-700">{{ $g->nama_gejala }}</p>
-                                </div>
+    <section class="rounded-lg border border-neutral-200 bg-white p-5 shadow-sm">
+        <div class="flex gap-2 border-b border-neutral-200 pb-4">
+            <button id="btn-gejala" class="rounded-lg bg-[#0E4E37] px-4 py-2 text-sm font-bold text-white">
+                Gejala
+            </button>
+            <button id="btn-target" class="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-bold text-neutral-600">
+                Penyakit / Hama
+            </button>
+        </div>
 
-                                <div class="flex gap-3">
-                                </div>
-                            </div>
-                        @endforeach
+        <div id="section-gejala" class="mt-5">
+            <h2 class="mb-4 text-base font-black text-neutral-900">Gejala</h2>
+            <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                @foreach($gejala as $g)
+                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+                        <span class="text-xs font-black text-[#0E4E37]">{{ $g->kode_gejala }}</span>
+                        <p class="mt-1 text-sm font-bold text-neutral-700">{{ $g->nama_gejala }}</p>
                     </div>
-                </div>
-                <!-- Penyakit & Hama -->
-                <div id="section-target" class="hidden px-6 mt-6">
-                    <h2 class="text-sm font-bold text-neutral-700 mb-3">
-                        Penyakit / Hama
-                    </h2>
+                @endforeach
+            </div>
+        </div>
 
-                    <div class="flex flex-col gap-3">
-
-                        <div class="flex flex-col gap-3">
-
-                <!-- Penyakit -->
+        <div id="section-target" class="hidden mt-5">
+            <h2 class="mb-4 text-base font-black text-neutral-900">Penyakit / Hama</h2>
+            <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                 @foreach($penyakit as $p)
-                <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] font-bold text-emerald-600">
-                            {{ $p->kode_penyakit }}
-                        </span>
-                        <p class="text-sm text-neutral-700">
-                            {{ $p->nama_penyakit }}
-                        </p>
+                    <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+                        <span class="text-xs font-black text-emerald-700">{{ $p->kode_penyakit }}</span>
+                        <p class="mt-1 text-sm font-bold text-neutral-700">{{ $p->nama_penyakit }}</p>
                     </div>
-                </div>
                 @endforeach
 
-                <!-- Hama -->
                 @foreach($hama as $h)
-                <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] font-bold text-orange-600">
-                            {{ $h->kode_hama }}
-                        </span>
-                        <p class="text-sm text-neutral-700">
-                            {{ $h->nama_hama }}
-                        </p>
+                    <div class="rounded-lg border border-orange-100 bg-orange-50 p-4">
+                        <span class="text-xs font-black text-orange-700">{{ $h->kode_hama }}</span>
+                        <p class="mt-1 text-sm font-bold text-neutral-700">{{ $h->nama_hama }}</p>
                     </div>
-                </div>
-                @endforeach         
-
-    </div>
-
-                    </div>
-                </div>
-
-    <!-- Rules List Cards -->
-    <div id="section-rule" class="hidden px-6 mt-6">
-        @foreach($rules as $rule)
-            @php
-                $target = $rule->target;
-                $isPenyakit = $rule->target_type === 'penyakit';
-                $badgeBg = $isPenyakit ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-orange-50 text-orange-700 border-orange-200';
-            @endphp
-            <div class="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex flex-col gap-2.5">
-                <div class="flex justify-between items-start">
-                    <div class="min-w-0 flex-grow pr-2">
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider {{ $badgeBg }}">
-                            {{ $isPenyakit ? 'Penyakit' : 'Hama' }}
-                        </span>
-                        <h3 class="font-bold text-neutral-800 text-sm mt-1 truncate leading-tight">
-                            {{ $isPenyakit ? $target->nama_penyakit : $target->nama_hama }}
-                        </h3>
-                    </div>
-                    <!-- CF Badge -->
-                    <div class="text-right">
-                        <span class="text-xs font-black text-[#0E4E37] block bg-[#E2F2EB] px-2 py-0.5 rounded-full">CF: {{ $rule->cf_pakar }}</span>
-                    </div>
-                </div>
+                @endforeach
             </div>
-        @endforeach
-    </div>
+        </div>
+
+    </section>
 </div>
+@endsection
+
+@section('scripts')
 <script>
 const btnGejala = document.getElementById('btn-gejala');
 const btnTarget = document.getElementById('btn-target');
-const btnRule = document.getElementById('btn-rule');
 
 const sectionGejala = document.getElementById('section-gejala');
 const sectionTarget = document.getElementById('section-target');
-const sectionRule = document.getElementById('section-rule');
 
 function aktifkan(button){
-    [btnGejala, btnTarget, btnRule].forEach(btn=>{
+    [btnGejala, btnTarget].forEach(btn=>{
         btn.style.backgroundColor="white";
         btn.style.color="#525252";
         btn.style.border="1px solid #e5e5e5";
@@ -153,17 +83,14 @@ function aktifkan(button){
 
     button.style.backgroundColor="#0E4E37";
     button.style.color="white";
-    button.style.border="none";
+    button.style.border="1px solid #0E4E37";
 }
 
 function showSection(section,button){
-
     sectionGejala.classList.add("hidden");
     sectionTarget.classList.add("hidden");
-    sectionRule.classList.add("hidden");
 
     section.classList.remove("hidden");
-
     aktifkan(button);
 }
 
@@ -173,10 +100,6 @@ btnGejala.addEventListener("click",()=>{
 
 btnTarget.addEventListener("click",()=>{
     showSection(sectionTarget,btnTarget);
-});
-
-btnRule.addEventListener("click",()=>{
-    showSection(sectionRule,btnRule);
 });
 
 showSection(sectionGejala,btnGejala);

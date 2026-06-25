@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Rule CF - SiPakar Padi')
+@section('title', 'Tambah Rule CF - Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">
@@ -113,8 +113,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" 
-                        onclick="syncTargetId()"
+                <button type="submit"
                         class="w-full bg-[#0E4E37] hover:bg-[#12583F] text-white text-sm font-bold py-3.5 rounded-full shadow-md transition mt-2 flex justify-center items-center"
                 >
                     Simpan Rule CF
@@ -156,6 +155,7 @@ const gejalaBox = document.getElementById("gejala-suggestion");
 gejalaInput.addEventListener("keyup", function(){
 
     const keyword = this.value;
+    document.getElementById("gejala_id").value = "";
 
     if(keyword.length < 2){
         gejalaBox.classList.add("hidden");
@@ -169,12 +169,7 @@ gejalaInput.addEventListener("keyup", function(){
         gejalaBox.innerHTML = "";
 
         if(data.length == 0){
-            gejalaBox.innerHTML = `
-                <div class="p-3 text-neutral-400 text-sm">
-                    Gejala belum ada
-                </div>
-            `;
-            gejalaBox.classList.remove("hidden");
+            gejalaBox.classList.add("hidden");
             return;
         }
 
@@ -211,6 +206,7 @@ const penyakitInput = document.getElementById("nama_penyakit");
 const penyakitBox = document.getElementById("penyakit-suggestion");
 
 penyakitInput.addEventListener("keyup",function(){
+    document.getElementById("real_target_id").value = "";
 
     fetch(`/pakar/search/penyakit?q=${this.value}`)
     .then(res=>res.json())
@@ -219,14 +215,7 @@ penyakitInput.addEventListener("keyup",function(){
         penyakitBox.innerHTML = "";
 
         if(data.length==0){
-
-            penyakitBox.innerHTML = `
-                <div class="p-3 text-neutral-400 text-sm">
-                    Tidak ada penyakit yang cocok
-                </div>
-            `;
-
-            penyakitBox.classList.remove("hidden");
+            penyakitBox.classList.add("hidden");
             return;
         }
 
@@ -262,6 +251,7 @@ const hamaInput = document.getElementById("nama_hama");
 const hamaBox = document.getElementById("hama-suggestion");
 
 hamaInput.addEventListener("keyup",function(){
+    document.getElementById("real_target_id").value = "";
 
     fetch(`/pakar/search/hama?q=${this.value}`)
     .then(res=>res.json())
@@ -270,14 +260,7 @@ hamaInput.addEventListener("keyup",function(){
         hamaBox.innerHTML = "";
 
         if(data.length==0){
-
-            hamaBox.innerHTML = `
-                <div class="p-3 text-neutral-400 text-sm">
-                    Tidak ada hama yang cocok
-                </div>
-            `;
-
-            hamaBox.classList.remove("hidden");
+            hamaBox.classList.add("hidden");
             return;
         }
 

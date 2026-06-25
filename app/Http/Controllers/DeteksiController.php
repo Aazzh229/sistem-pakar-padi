@@ -49,6 +49,14 @@ class DeteksiController extends Controller
             }
         }
 
+        $selectedCount = count($selected);
+        if ($selectedCount < 1 || $selectedCount > 3) {
+            return redirect()
+                ->route('deteksi.wizard')
+                ->withErrors(['symptoms' => 'Pilih minimal 1 dan maksimal 3 gejala tanaman untuk diagnosis.'])
+                ->withInput();
+        }
+
         session(['selected_symptoms' => $selected]);
 
         return redirect()->route('deteksi.result');
@@ -64,7 +72,7 @@ class DeteksiController extends Controller
         $selected = session('selected_symptoms', []);
         $selectedCount = count(array_filter($selected, fn($val) => $val > 0));
 
-        if ($selectedCount === 0) {
+        if ($selectedCount < 1 || $selectedCount > 3) {
             return redirect()->route('deteksi.wizard');
         }
 
@@ -83,11 +91,34 @@ class DeteksiController extends Controller
     {
         $user = Auth::user();
         if ($user->role === 'admin') {
-            $histories = DiagnosisHistory::with('user')->orderBy('created_at', 'desc')->get();
+            $histories = DiagnosisHistory::withTrashed()
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
             $histories = DiagnosisHistory::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         }
 
         return view('deteksi.history', compact('histories'));
+    }
+
+    public function deleteHistory(Request $request)
+    {
+        $request->validate([
+            'history_ids' => 'required|array|min:1',
+            'history_ids.*' => 'integer|exists:diagnosis_histories,id',
+        ]);
+
+        $query = DiagnosisHistory::whereIn('id', $request->history_ids);
+
+        if (Auth::user()->role !== 'admin') {
+            $query->where('user_id', Auth::id());
+        }
+
+        $deletedCount = $query->delete();
+
+        return redirect()
+            ->route('deteksi.history')
+            ->with('success', $deletedCount . ' riwayat diagnosa disembunyikan dari daftar.');
     }
 }

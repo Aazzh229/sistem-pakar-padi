@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Akun - SiPakar Padi')
+@section('title', 'Daftar Akun - Padiku')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] flex flex-col justify-center px-6 py-12 text-white">
@@ -12,7 +12,7 @@
             <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 8.8C19 16 15 20 11 20z"></path>
             <path d="M19 2c-2.26 3.19-5.27 6.42-8 8"></path>
         </svg>
-        <h1 class="text-3xl font-extrabold tracking-tight">SiPakar Padi</h1>
+        <h1 class="text-3xl font-extrabold tracking-tight">Padiku</h1>
         <p class="text-xs text-white/70 mt-1 font-light max-w-[250px]">Sistem Pakar Identifikasi Hama & Penyakit Padi</p>
     </div>
 

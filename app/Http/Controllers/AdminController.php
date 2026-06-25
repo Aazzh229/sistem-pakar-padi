@@ -174,13 +174,85 @@ public function searchHama(Request $request)
     public function storeRule(Request $request)
     {
         $request->validate([
-            'gejala_id' => 'required|exists:gejala,id',
             'target_type' => 'required|in:penyakit,hama',
-            'target_id' => 'required|integer',
-            'cf_pakar' => 'required|numeric|between:0,1'
+            'cf_pakar' => 'required|numeric|between:0,1',
+            'gejala_id' => 'nullable|integer|exists:gejala,id',
+            'nama_gejala' => 'nullable|string|max:255',
+            'target_id' => 'nullable|integer',
+            'nama_penyakit' => 'nullable|string|max:255',
+            'nama_hama' => 'nullable|string|max:255',
         ]);
 
-        Rule::create(array_merge($request->all(), ['created_by' => auth()->id()]));
+        $gejalaId = $request->input('gejala_id');
+        if (!$gejalaId && $request->filled('nama_gejala')) {
+            $namaGejala = trim($request->nama_gejala);
+            if ($namaGejala !== '') {
+                $gejala = Gejala::firstOrCreate(
+                    ['nama_gejala' => $namaGejala],
+                    [
+                        'kode_gejala' => $this->nextCode(Gejala::class, 'kode_gejala', 'G'),
+                        'kategori' => 'Seluruh Tanaman',
+                        'created_by' => auth()->id(),
+                    ]
+                );
+                $gejalaId = $gejala->id;
+            }
+        }
+
+        if (!$gejalaId) {
+            return back()->withErrors(['nama_gejala' => 'Silakan pilih atau isi gejala baru.'])->withInput();
+        }
+
+        $targetType = $request->input('target_type');
+        $targetId = $request->input('target_id');
+
+        if (!$targetId) {
+            if ($targetType === 'penyakit' && $request->filled('nama_penyakit')) {
+                $namaTarget = trim($request->nama_penyakit);
+                if ($namaTarget !== '') {
+                    $target = Penyakit::firstOrCreate(
+                        ['nama_penyakit' => $namaTarget],
+                        [
+                            'kode_penyakit' => $this->nextCode(Penyakit::class, 'kode_penyakit', 'P'),
+                            'slug' => Str::slug($namaTarget),
+                            'created_by' => auth()->id(),
+                        ]
+                    );
+                    $targetId = $target->id;
+                    $this->syncLibrary($targetType, $target->nama_penyakit);
+                }
+            } elseif ($targetType === 'hama' && $request->filled('nama_hama')) {
+                $namaTarget = trim($request->nama_hama);
+                if ($namaTarget !== '') {
+                    $target = Hama::firstOrCreate(
+                        ['nama_hama' => $namaTarget],
+                        [
+                            'kode_hama' => $this->nextCode(Hama::class, 'kode_hama', 'H'),
+                            'slug' => Str::slug($namaTarget),
+                            'created_by' => auth()->id(),
+                        ]
+                    );
+                    $targetId = $target->id;
+                    $this->syncLibrary($targetType, $target->nama_hama);
+                }
+            }
+        }
+
+        if (!$targetId) {
+            return back()->withErrors(['target_id' => 'Silakan pilih atau isi penyakit/hama baru.'])->withInput();
+        }
+
+        Rule::firstOrCreate(
+            [
+                'gejala_id' => $gejalaId,
+                'target_type' => $targetType,
+                'target_id' => $targetId,
+            ],
+            [
+                'cf_pakar' => $request->cf_pakar,
+                'created_by' => auth()->id(),
+            ]
+        );
 
         return redirect()->route('admin.rules.index')->with('success', 'Rule CF berhasil ditambahkan.');
     }
@@ -279,5 +351,34 @@ public function searchHama(Request $request)
         $library = Library::findOrFail($id);
         $library->delete();
         return redirect()->route('admin.library.index')->with('success', 'Library berhasil dihapus.');
+    }
+
+    private function nextCode(string $modelClass, string $column, string $prefix): string
+    {
+        $last = $modelClass::orderBy($column, 'desc')->first();
+        $next = 1;
+
+        if ($last && preg_match('/' . preg_quote($prefix, '/') . '(\d+)/', $last->{$column}, $matches)) {
+            $next = (int) $matches[1] + 1;
+        }
+
+        return $prefix . str_pad($next, 2, '0', STR_PAD_LEFT);
+    }
+
+    private function syncLibrary(string $jenis, string $nama): void
+    {
+        Library::firstOrCreate(
+            [
+                'jenis' => $jenis,
+                'nama' => $nama,
+            ],
+            [
+                'deskripsi' => 'Deskripsi penyakit/hama padi ' . $nama . '.',
+                'penyebab' => 'Penyebab belum ditentukan.',
+                'solusi' => 'Hubungi pakar pertanian setempat untuk konsultasi.',
+                'pencegahan' => 'Lakukan monitoring tanaman padi secara berkala.',
+                'created_by' => auth()->id(),
+            ]
+        );
     }
 }

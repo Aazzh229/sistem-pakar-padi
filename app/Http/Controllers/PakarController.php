@@ -15,6 +15,27 @@ use Illuminate\Support\Str;
 
 class PakarController extends Controller
 {
+    public function searchGejala(Request $request)
+    {
+        return Gejala::where('nama_gejala', 'like', '%' . $request->q . '%')
+            ->limit(5)
+            ->get();
+    }
+
+    public function searchPenyakit(Request $request)
+    {
+        return Penyakit::where('nama_penyakit', 'like', '%' . $request->q . '%')
+            ->limit(5)
+            ->get();
+    }
+
+    public function searchHama(Request $request)
+    {
+        return Hama::where('nama_hama', 'like', '%' . $request->q . '%')
+            ->limit(5)
+            ->get();
+    }
+
     public function indexRules()
 {
     $rules = Rule::with(['gejala', 'target'])->get();
@@ -52,6 +73,86 @@ public function indexLibrary()
 
     public function storeRules(Request $request)
     {
+        if (!$request->has('symptom_rows')) {
+            $request->validate([
+                'target_type' => 'required|in:penyakit,hama',
+                'cf_pakar' => 'required|numeric|between:0,1',
+            ]);
+
+            $gejalaId = $request->input('gejala_id');
+            if (!$gejalaId && $request->filled('nama_gejala')) {
+                $namaGejala = trim($request->nama_gejala);
+                if ($namaGejala !== '') {
+                    $gejala = Gejala::firstOrCreate(
+                        ['nama_gejala' => $namaGejala],
+                        [
+                            'kode_gejala' => $this->nextCode(Gejala::class, 'kode_gejala', 'G'),
+                            'kategori' => 'Seluruh Tanaman',
+                            'created_by' => Auth::id(),
+                        ]
+                    );
+                    $gejalaId = $gejala->id;
+                }
+            }
+
+            if (!$gejalaId) {
+                return back()->withErrors(['nama_gejala' => 'Silakan pilih atau isi gejala.'])->withInput();
+            }
+
+            $targetType = $request->input('target_type');
+            $targetId = $request->input('target_id');
+
+            if (!$targetId) {
+                if ($targetType === 'penyakit' && $request->filled('nama_penyakit')) {
+                    $namaTarget = trim($request->nama_penyakit);
+                    if ($namaTarget !== '') {
+                        $target = Penyakit::firstOrCreate(
+                            ['nama_penyakit' => $namaTarget],
+                            [
+                                'kode_penyakit' => $this->nextCode(Penyakit::class, 'kode_penyakit', 'P'),
+                                'slug' => Str::slug($namaTarget),
+                                'created_by' => Auth::id(),
+                            ]
+                        );
+                        $targetId = $target->id;
+                        $this->syncLibrary($targetType, $target->nama_penyakit);
+                    }
+                } elseif ($targetType === 'hama' && $request->filled('nama_hama')) {
+                    $namaTarget = trim($request->nama_hama);
+                    if ($namaTarget !== '') {
+                        $target = Hama::firstOrCreate(
+                            ['nama_hama' => $namaTarget],
+                            [
+                                'kode_hama' => $this->nextCode(Hama::class, 'kode_hama', 'H'),
+                                'slug' => Str::slug($namaTarget),
+                                'created_by' => Auth::id(),
+                            ]
+                        );
+                        $targetId = $target->id;
+                        $this->syncLibrary($targetType, $target->nama_hama);
+                    }
+                }
+            }
+
+            if (!$targetId) {
+                return back()->withErrors(['target_id' => 'Silakan pilih atau isi target penyakit/hama.'])->withInput();
+            }
+
+            Rule::firstOrCreate(
+                [
+                    'gejala_id' => $gejalaId,
+                    'target_type' => $targetType,
+                    'target_id' => $targetId,
+                ],
+                [
+                    'cf_pakar' => $request->cf_pakar,
+                    'created_by' => Auth::id(),
+                ]
+            );
+
+            return redirect()->route('pakar.rules.index')->with('success', 'Rule CF berhasil ditambahkan.');
+        }
+
         $request->validate([
             'target_type'  => 'required|in:penyakit,hama',
             'symptom_rows' => 'required|array|min:1|max:3',
@@ -175,6 +276,39 @@ public function indexLibrary()
         return redirect()->route('pakar.dashboard')->with('success', 'Basis pengetahuan (Rule) dan item baru berhasil ditambahkan.');
     }
 
+    public function editRule($id)
+    {
+        $rule = Rule::findOrFail($id);
+        $gejala = Gejala::orderBy('kode_gejala')->get();
+        $penyakit = Penyakit::orderBy('nama_penyakit')->get();
+        $hama = Hama::orderBy('nama_hama')->get();
+
+        return view('pakar.rules.edit', compact('rule', 'gejala', 'penyakit', 'hama'));
+    }
+
+    public function updateRule(Request $request, $id)
+    {
+        $rule = Rule::findOrFail($id);
+
+        $request->validate([
+            'gejala_id' => 'required|exists:gejala,id',
+            'target_type' => 'required|in:penyakit,hama',
+            'target_id' => 'required|integer',
+            'cf_pakar' => 'required|numeric|between:0,1',
+        ]);
+
+        $rule->update($request->only('gejala_id', 'target_type', 'target_id', 'cf_pakar'));
+
+        return redirect()->route('pakar.rules.index')->with('success', 'Rule CF berhasil diperbarui.');
+    }
+
+    public function deleteRule($id)
+    {
+        Rule::findOrFail($id)->delete();
+
+        return redirect()->route('pakar.rules.index')->with('success', 'Rule CF berhasil dihapus.');
+    }
+
 
     public function showInputLibrary()
     {
@@ -200,6 +334,49 @@ public function indexLibrary()
         ));
 
         return redirect()->route('pakar.dashboard')->with('success', 'Artikel library berhasil ditambahkan.');
+    }
+
+    public function editLibrary($id)
+    {
+        $library = Library::findOrFail($id);
+
+        return view('pakar.library.edit', compact('library'));
+    }
+
+    public function updateLibrary(Request $request, $id)
+    {
+        $library = Library::findOrFail($id);
+
+        $request->validate([
+            'jenis' => 'required|in:penyakit,hama',
+            'nama' => 'required|string|max:255',
+            'nama_latin' => 'nullable|string|max:255',
+            'deskripsi' => 'required|string',
+            'penyebab' => 'nullable|string',
+            'solusi' => 'required|string',
+            'pencegahan' => 'nullable|string',
+            'gambar' => 'nullable|url',
+        ]);
+
+        $library->update($request->only(
+            'jenis',
+            'nama',
+            'nama_latin',
+            'deskripsi',
+            'penyebab',
+            'solusi',
+            'pencegahan',
+            'gambar'
+        ));
+
+        return redirect()->route('pakar.library.index')->with('success', 'Artikel library berhasil diperbarui.');
+    }
+
+    public function deleteLibrary($id)
+    {
+        Library::findOrFail($id)->delete();
+
+        return redirect()->route('pakar.library.index')->with('success', 'Artikel library berhasil dihapus.');
     }
 
     public function showCreateUser()
@@ -242,19 +419,32 @@ public function indexLibrary()
     public function storeGejala(Request $request)
     {
         $request->validate([
-            'kode_gejala' => 'required|string|unique:gejala,kode_gejala',
             'nama_gejala' => 'required|string|max:255',
-            'kategori' => 'required|string|max:255',
+            'kode_gejala' => 'nullable|string|max:20',
+            'kategori' => 'nullable|string|max:255',
             'deskripsi' => 'nullable|string',
         ]);
 
-        Gejala::create([
-            'kode_gejala' => strtoupper($request->kode_gejala),
-            'nama_gejala' => $request->nama_gejala,
-            'kategori' => $request->kategori,
-            'deskripsi' => $request->deskripsi,
-            'created_by' => Auth::id()
-        ]);
+        $namaGejala = trim($request->nama_gejala);
+        if ($namaGejala === '') {
+            return back()->withErrors(['nama_gejala' => 'Nama gejala harus diisi.'])->withInput();
+        }
+
+        $gejala = Gejala::where('nama_gejala', $namaGejala)->first();
+        if (!$gejala) {
+            $kode = strtoupper(trim($request->kode_gejala ?? ''));
+            if ($kode === '' || Gejala::where('kode_gejala', $kode)->exists()) {
+                $kode = $this->nextCode(Gejala::class, 'kode_gejala', 'G');
+            }
+
+            Gejala::create([
+                'kode_gejala' => $kode,
+                'nama_gejala' => $namaGejala,
+                'kategori' => $request->kategori ?: 'Seluruh Tanaman',
+                'deskripsi' => $request->deskripsi,
+                'created_by' => Auth::id()
+            ]);
+        }
 
         return redirect()->route('pakar.dashboard')->with('success', 'Gejala Baru berhasil ditambahkan.');
     }
@@ -274,18 +464,33 @@ public function indexLibrary()
     public function storePenyakit(Request $request)
     {
         $request->validate([
-            'kode_penyakit' => 'required|string|unique:penyakit,kode_penyakit',
             'nama_penyakit' => 'required|string|max:255',
+            'kode_penyakit' => 'nullable|string|max:20',
             'deskripsi' => 'nullable|string',
         ]);
 
-        Penyakit::create([
-            'kode_penyakit' => strtoupper($request->kode_penyakit),
-            'nama_penyakit' => $request->nama_penyakit,
-            'slug' => Str::slug($request->nama_penyakit),
-            'deskripsi' => $request->deskripsi,
-            'created_by' => Auth::id()
-        ]);
+        $namaPenyakit = trim($request->nama_penyakit);
+        if ($namaPenyakit === '') {
+            return back()->withErrors(['nama_penyakit' => 'Nama penyakit harus diisi.'])->withInput();
+        }
+
+        $penyakit = Penyakit::where('nama_penyakit', $namaPenyakit)->first();
+        if (!$penyakit) {
+            $kode = strtoupper(trim($request->kode_penyakit ?? ''));
+            if ($kode === '' || Penyakit::where('kode_penyakit', $kode)->exists()) {
+                $kode = $this->nextCode(Penyakit::class, 'kode_penyakit', 'P');
+            }
+
+            $penyakit = Penyakit::create([
+                'kode_penyakit' => $kode,
+                'nama_penyakit' => $namaPenyakit,
+                'slug' => Str::slug($namaPenyakit),
+                'deskripsi' => $request->deskripsi,
+                'created_by' => Auth::id()
+            ]);
+        }
+
+        $this->syncLibrary('penyakit', $penyakit->nama_penyakit);
 
         return redirect()->route('pakar.dashboard')->with('success', 'Penyakit Baru berhasil ditambahkan.');
     }
@@ -305,18 +510,33 @@ public function indexLibrary()
     public function storeHama(Request $request)
     {
         $request->validate([
-            'kode_hama' => 'required|string|unique:hama,kode_hama',
             'nama_hama' => 'required|string|max:255',
+            'kode_hama' => 'nullable|string|max:20',
             'deskripsi' => 'nullable|string',
         ]);
 
-        Hama::create([
-            'kode_hama' => strtoupper($request->kode_hama),
-            'nama_hama' => $request->nama_hama,
-            'slug' => Str::slug($request->nama_hama),
-            'deskripsi' => $request->deskripsi,
-            'created_by' => Auth::id()
-        ]);
+        $namaHama = trim($request->nama_hama);
+        if ($namaHama === '') {
+            return back()->withErrors(['nama_hama' => 'Nama hama harus diisi.'])->withInput();
+        }
+
+        $hama = Hama::where('nama_hama', $namaHama)->first();
+        if (!$hama) {
+            $kode = strtoupper(trim($request->kode_hama ?? ''));
+            if ($kode === '' || Hama::where('kode_hama', $kode)->exists()) {
+                $kode = $this->nextCode(Hama::class, 'kode_hama', 'H');
+            }
+
+            $hama = Hama::create([
+                'kode_hama' => $kode,
+                'nama_hama' => $namaHama,
+                'slug' => Str::slug($namaHama),
+                'deskripsi' => $request->deskripsi,
+                'created_by' => Auth::id()
+            ]);
+        }
+
+        $this->syncLibrary('hama', $hama->nama_hama);
 
         return redirect()->route('pakar.dashboard')->with('success', 'Hama Baru berhasil ditambahkan.');
     }
@@ -365,86 +585,129 @@ public function indexLibrary()
 
         if ($dataType === 'penyakit') {
             $request->validate([
-                'kode' => 'required|string|unique:penyakit,kode_penyakit',
                 'nama' => 'required|string|max:255',
+                'kode' => 'nullable|string|max:20',
                 'deskripsi' => 'nullable|string',
             ]);
 
-            $penyakit = Penyakit::create([
-                'kode_penyakit' => strtoupper($request->kode),
-                'nama_penyakit' => $request->nama,
-                'slug' => Str::slug($request->nama),
-                'deskripsi' => $request->deskripsi,
-                'created_by' => Auth::id()
-            ]);
+            $nama = trim($request->nama);
+            if ($nama === '') {
+                return back()->withErrors(['nama' => 'Nama penyakit harus diisi.'])->withInput();
+            }
 
-            // Auto-create Library entry so it appears in the encyclopedia
-            $exists = Library::where('jenis', 'penyakit')->where('nama', $request->nama)->exists();
-            if (!$exists) {
-                Library::create([
-                    'jenis' => 'penyakit',
-                    'nama' => $request->nama,
-                    'deskripsi' => $request->deskripsi ?? 'Deskripsi penyakit ' . $request->nama . '.',
-                    'penyebab' => 'Penyebab belum ditentukan.',
-                    'solusi' => 'Hubungi pakar pertanian setempat untuk konsultasi.',
-                    'pencegahan' => 'Lakukan sanitasi dan monitoring berkala.',
+            $penyakit = Penyakit::where('nama_penyakit', $nama)->first();
+            if (!$penyakit) {
+                $kode = strtoupper(trim($request->kode ?? ''));
+                if ($kode === '' || Penyakit::where('kode_penyakit', $kode)->exists()) {
+                    $kode = $this->nextCode(Penyakit::class, 'kode_penyakit', 'P');
+                }
+
+                $penyakit = Penyakit::create([
+                    'kode_penyakit' => $kode,
+                    'nama_penyakit' => $nama,
+                    'slug' => Str::slug($nama),
+                    'deskripsi' => $request->deskripsi,
                     'created_by' => Auth::id()
                 ]);
             }
+
+            $this->syncLibrary('penyakit', $penyakit->nama_penyakit);
 
             return redirect()->route('pakar.dashboard')->with('success', 'Penyakit Baru berhasil ditambahkan dan disinkronisasi ke Ensiklopedia.');
 
         } elseif ($dataType === 'hama') {
             $request->validate([
-                'kode' => 'required|string|unique:hama,kode_hama',
                 'nama' => 'required|string|max:255',
+                'kode' => 'nullable|string|max:20',
                 'deskripsi' => 'nullable|string',
             ]);
 
-            $hama = Hama::create([
-                'kode_hama' => strtoupper($request->kode),
-                'nama_hama' => $request->nama,
-                'slug' => Str::slug($request->nama),
-                'deskripsi' => $request->deskripsi,
-                'created_by' => Auth::id()
-            ]);
+            $nama = trim($request->nama);
+            if ($nama === '') {
+                return back()->withErrors(['nama' => 'Nama hama harus diisi.'])->withInput();
+            }
 
-            // Auto-create Library entry so it appears in the encyclopedia
-            $exists = Library::where('jenis', 'hama')->where('nama', $request->nama)->exists();
-            if (!$exists) {
-                Library::create([
-                    'jenis' => 'hama',
-                    'nama' => $request->nama,
-                    'deskripsi' => $request->deskripsi ?? 'Deskripsi hama ' . $request->nama . '.',
-                    'penyebab' => 'Penyebab belum ditentukan.',
-                    'solusi' => 'Hubungi pakar pertanian setempat untuk konsultasi.',
-                    'pencegahan' => 'Lakukan sanitasi dan monitoring berkala.',
+            $hama = Hama::where('nama_hama', $nama)->first();
+            if (!$hama) {
+                $kode = strtoupper(trim($request->kode ?? ''));
+                if ($kode === '' || Hama::where('kode_hama', $kode)->exists()) {
+                    $kode = $this->nextCode(Hama::class, 'kode_hama', 'H');
+                }
+
+                $hama = Hama::create([
+                    'kode_hama' => $kode,
+                    'nama_hama' => $nama,
+                    'slug' => Str::slug($nama),
+                    'deskripsi' => $request->deskripsi,
                     'created_by' => Auth::id()
                 ]);
             }
+
+            $this->syncLibrary('hama', $hama->nama_hama);
 
             return redirect()->route('pakar.dashboard')->with('success', 'Hama Baru berhasil ditambahkan dan disinkronisasi ke Ensiklopedia.');
 
         } elseif ($dataType === 'gejala') {
             $request->validate([
-                'kode' => 'required|string|unique:gejala,kode_gejala',
                 'nama' => 'required|string|max:255',
-                'kategori' => 'required|string|max:255',
+                'kode' => 'nullable|string|max:20',
+                'kategori' => 'nullable|string|max:255',
                 'deskripsi' => 'nullable|string',
             ]);
 
-            Gejala::create([
-                'kode_gejala' => strtoupper($request->kode),
-                'nama_gejala' => $request->nama,
-                'kategori' => $request->kategori,
-                'deskripsi' => $request->deskripsi,
-                'created_by' => Auth::id()
-            ]);
+            $nama = trim($request->nama);
+            if ($nama === '') {
+                return back()->withErrors(['nama' => 'Nama gejala harus diisi.'])->withInput();
+            }
+
+            $gejala = Gejala::where('nama_gejala', $nama)->first();
+            if (!$gejala) {
+                $kode = strtoupper(trim($request->kode ?? ''));
+                if ($kode === '' || Gejala::where('kode_gejala', $kode)->exists()) {
+                    $kode = $this->nextCode(Gejala::class, 'kode_gejala', 'G');
+                }
+
+                Gejala::create([
+                    'kode_gejala' => $kode,
+                    'nama_gejala' => $nama,
+                    'kategori' => $request->kategori ?: 'Seluruh Tanaman',
+                    'deskripsi' => $request->deskripsi,
+                    'created_by' => Auth::id()
+                ]);
+            }
 
             return redirect()->route('pakar.dashboard')->with('success', 'Gejala Baru berhasil ditambahkan.');
         }
 
         return redirect()->route('pakar.dashboard')->with('error', 'Tipe data tidak valid.');
     }
-}
 
+    private function nextCode(string $modelClass, string $column, string $prefix): string
+    {
+        $last = $modelClass::orderBy($column, 'desc')->first();
+        $next = 1;
+
+        if ($last && preg_match('/' . preg_quote($prefix, '/') . '(\d+)/', $last->{$column}, $matches)) {
+            $next = (int) $matches[1] + 1;
+        }
+
+        return $prefix . str_pad($next, 2, '0', STR_PAD_LEFT);
+    }
+
+    private function syncLibrary(string $jenis, string $nama): void
+    {
+        Library::firstOrCreate(
+            [
+                'jenis' => $jenis,
+                'nama' => $nama,
+            ],
+            [
+                'deskripsi' => 'Deskripsi penyakit/hama padi ' . $nama . '.',
+                'penyebab' => 'Penyebab belum ditentukan.',
+                'solusi' => 'Hubungi pakar pertanian setempat untuk konsultasi.',
+                'pencegahan' => 'Lakukan monitoring tanaman padi secara berkala.',
+                'created_by' => Auth::id(),
+            ]
+        );
+    }
+}

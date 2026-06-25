@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $item->nama . ' - Ensiklopedia SiPakar Padi')
+@section('title', $item->nama . ' - Ensiklopedia Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">

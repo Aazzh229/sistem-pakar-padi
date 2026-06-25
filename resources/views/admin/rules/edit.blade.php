@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Ubah Rule CF - SiPakar Padi')
+@section('title', 'Ubah Rule CF - Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">

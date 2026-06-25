@@ -38,13 +38,13 @@
             
             <h2 class="text-base font-bold text-neutral-800 mb-2">Petunjuk Diagnosa</h2>
             <p class="text-xs text-neutral-500 leading-relaxed font-light mb-6 max-w-xs">
-                Pilih semua gejala yang tampak pada tanaman padi Anda dari daftar lengkap, kemudian tentukan tingkat keyakinan Anda.
+                Pilih 1 sampai 3 gejala yang paling tampak pada tanaman padi Anda, kemudian tentukan tingkat keyakinan Anda.
             </p>
 
             <div class="w-full flex flex-col gap-3 text-left mb-6">
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">1</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Cari dan pilih gejala pada daftar (bisa dicari atau difilter berdasarkan kategori).</p>
+                    <p class="text-xs text-neutral-600 leading-normal font-light">Cari dan pilih 1 sampai 3 gejala pada daftar (bisa dicari atau difilter berdasarkan kategori).</p>
                 </div>
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">2</span>

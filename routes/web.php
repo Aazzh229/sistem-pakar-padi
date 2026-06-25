@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\EnsiklopediaController;
@@ -9,6 +10,24 @@ use App\Http\Controllers\PakarController;
 use App\Http\Controllers\AdminController;
 
 // --- PUBLIC AUTH ROUTES ---
+Route::get('/', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+
+    $user = Auth::user();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->role === 'pakar') {
+        return redirect()->route('pakar.dashboard');
+    }
+
+    return redirect()->route('beranda');
+})->name('root');
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -22,9 +41,15 @@ Route::get('/admin/search/hama',[AdminController::class,'searchHama']);
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
     
-    // Shared access for User (Petani), Pakar, and Admin
+    // Diagnosis history is shared, but admin receives the desktop admin layout in the view.
     Route::middleware(['role:user,pakar,admin'])->group(function () {
-        Route::get('/', [BerandaController::class, 'index'])->name('beranda');
+        Route::get('/riwayat', [DeteksiController::class, 'history'])->name('deteksi.history');
+        Route::post('/riwayat/hapus', [DeteksiController::class, 'deleteHistory'])->name('deteksi.history.delete');
+    });
+
+    // Mobile app access for User (Petani) and Pakar only.
+    Route::middleware(['role:user,pakar'])->group(function () {
+        Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
         
         // Ensiklopedia
         Route::get('/ensiklopedia', [EnsiklopediaController::class, 'index'])->name('ensiklopedia.index');
@@ -39,11 +64,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deteksi/next-symptoms', [DeteksiController::class, 'nextSymptoms'])->name('deteksi.next-symptoms');
         Route::get('/deteksi/result', [DeteksiController::class, 'result'])->name('deteksi.result');
         Route::post('/deteksi/reset', [DeteksiController::class, 'reset'])->name('deteksi.reset');
-        Route::get('/riwayat', [DeteksiController::class, 'history'])->name('deteksi.history');
     });
 
-    // Pakar & Admin Access
-Route::middleware(['role:pakar,admin'])->group(function () {
+    // Pakar Access
+Route::middleware(['role:pakar'])->group(function () {
 
     Route::get('/pakar', [PakarController::class, 'dashboard'])
         ->name('pakar.dashboard');
@@ -55,20 +79,39 @@ Route::middleware(['role:pakar,admin'])->group(function () {
         ->name('pakar.master.store');
 
     // Rules
-    Route::get('/pakar/rules', [AdminController::class, 'indexRules'])
+    Route::get('/pakar/search/gejala', [PakarController::class, 'searchGejala'])
+        ->name('pakar.search.gejala');
+    Route::get('/pakar/search/penyakit', [PakarController::class, 'searchPenyakit'])
+        ->name('pakar.search.penyakit');
+    Route::get('/pakar/search/hama', [PakarController::class, 'searchHama'])
+        ->name('pakar.search.hama');
+
+    Route::get('/pakar/rules', [PakarController::class, 'indexRules'])
         ->name('pakar.rules.index');
     Route::get('/pakar/rules/create', [PakarController::class, 'showInputRules'])
         ->name('pakar.rules.create');
     Route::post('/pakar/rules', [PakarController::class, 'storeRules'])
         ->name('pakar.rules.store');
+    Route::get('/pakar/rules/{id}/edit', [PakarController::class, 'editRule'])
+        ->name('pakar.rules.edit');
+    Route::post('/pakar/rules/{id}', [PakarController::class, 'updateRule'])
+        ->name('pakar.rules.update');
+    Route::post('/pakar/rules/{id}/delete', [PakarController::class, 'deleteRule'])
+        ->name('pakar.rules.delete');
 
     // Library
-    Route::get('/pakar/library', [AdminController::class, 'indexLibrary'])
+    Route::get('/pakar/library', [PakarController::class, 'indexLibrary'])
         ->name('pakar.library.index');
     Route::get('/pakar/library/create', [PakarController::class, 'showInputLibrary'])
         ->name('pakar.library.create');
     Route::post('/pakar/library', [PakarController::class, 'storeLibrary'])
         ->name('pakar.library.store');
+    Route::get('/pakar/library/{id}/edit', [PakarController::class, 'editLibrary'])
+        ->name('pakar.library.edit');
+    Route::post('/pakar/library/{id}', [PakarController::class, 'updateLibrary'])
+        ->name('pakar.library.update');
+    Route::post('/pakar/library/{id}/delete', [PakarController::class, 'deleteLibrary'])
+        ->name('pakar.library.delete');
 
     // Input Gejala
     Route::get('/pakar/gejala/create', [PakarController::class, 'showInputMaster'])

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Artikel Library - SiPakar Padi')
+@section('title', 'Tambah Artikel Library - Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">

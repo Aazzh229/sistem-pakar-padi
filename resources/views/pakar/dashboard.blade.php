@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard pakar - SiPakar Padi')
+@section('title', 'Dashboard pakar - Padiku')
 
 @section('content')
 <div class="flex flex-col w-full text-neutral-800">
@@ -52,21 +52,6 @@
                     </svg>
                 </div>
                 <span class="text-xs font-bold text-neutral-700">Kelola Pengetahuan Library</span>
-            </div>
-            <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </a>
-
-        <!-- Module 4: Monitoring Diagnosa -->
-        <a href="{{ route('deteksi.history') }}" class="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex items-center justify-between hover:bg-neutral-50 transition">
-            <div class="flex items-center gap-3">
-                <div class="bg-neutral-100 text-neutral-600 p-2 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                </div>
-                <span class="text-xs font-bold text-neutral-700">Monitoring Riwayat Diagnosa</span>
             </div>
             <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
