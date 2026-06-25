@@ -12,13 +12,32 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </a>
-            <h1 class="text-xl font-bold">Kelola Aturan CF</h1>
+            <h1 class="text-xl font-bold">Kelola Basis Pengetahuan CF</h1>
         </div>
         <div class="flex justify-between items-center">
-            <p class="text-white/80 text-xs font-light">Pemetaan gejala ke hama & penyakit.</p>
+            <p class="text-white/80 text-xs font-light">Kelola gejala, hama dan penyakit</p>
             <a href="{{ route('admin.rules.create') }}" class="bg-[#3CD070] text-[#0A3D2A] text-xs font-bold px-3.5 py-1.5 rounded-full transition shadow-sm">
-                + Tambah Rule
+                + Tambah Data
             </a>
+        </div>
+    </div>
+    
+    <!-- Kategori -->
+    <div class="px-6 -mt-3 relative z-10">
+        <div class="flex gap-2 overflow-x-auto pb-1">
+
+            <button id="btn-gejala" class="px-4 py-2 rounded-full bg-[#0E4E37] text-white text-xs font-bold whitespace-nowrap">
+                Gejala
+            </button>
+
+            <button id="btn-target" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
+                Penyakit / Hama
+            </button>
+
+            <button id="btn-rule" class="px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 text-xs font-bold whitespace-nowrap">
+                Rule
+            </button>
+
         </div>
     </div>
 
@@ -29,8 +48,68 @@
         </div>
     @endif
 
+    <!-- Gejala -->
+    <div id="section-gejala" class="px-6 mt-6">
+        <h2 class="text-sm font-bold text-neutral-700 mb-3">Gejala</h2>
+                    <div class="flex flex-col gap-3">
+                        @foreach($gejala as $g)
+                            <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] font-bold text-[#0E4E37]">{{ $g->kode_gejala }}</span>
+                                    <p class="text-sm text-neutral-700">{{ $g->nama_gejala }}</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <!-- Penyakit & Hama -->
+                <div id="section-target" class="hidden px-6 mt-6">
+                    <h2 class="text-sm font-bold text-neutral-700 mb-3">
+                        Penyakit / Hama
+                    </h2>
+
+                    <div class="flex flex-col gap-3">
+
+                        <div class="flex flex-col gap-3">
+
+                <!-- Penyakit -->
+                @foreach($penyakit as $p)
+                <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] font-bold text-emerald-600">
+                            {{ $p->kode_penyakit }}
+                        </span>
+                        <p class="text-sm text-neutral-700">
+                            {{ $p->nama_penyakit }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Hama -->
+                @foreach($hama as $h)
+                <div class="bg-white border border-neutral-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] font-bold text-orange-600">
+                            {{ $h->kode_hama }}
+                        </span>
+                        <p class="text-sm text-neutral-700">
+                            {{ $h->nama_hama }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach         
+
+    </div>
+
+                    </div>
+                </div>
+
     <!-- Rules List Cards -->
-    <div class="px-6 -mt-4 relative z-10 flex flex-col gap-4 mt-6">
+    <div id="section-rule" class="hidden px-6 mt-6">
         @foreach($rules as $rule)
             @php
                 $target = $rule->target;
@@ -52,29 +131,54 @@
                         <span class="text-xs font-black text-[#0E4E37] block bg-[#E2F2EB] px-2 py-0.5 rounded-full">CF: {{ $rule->cf_pakar }}</span>
                     </div>
                 </div>
-
-                <!-- Gejala -->
-                <div class="bg-neutral-50 p-2.5 rounded-lg border border-neutral-100 flex items-start gap-2">
-                    <span class="bg-[#E2F2EB] text-[#0A3D2A] text-[9px] font-bold px-1 py-0.5 rounded flex-shrink-0 mt-0.5">
-                        {{ $rule->gejala->kode_gejala }}
-                    </span>
-                    <p class="text-xs text-neutral-500 font-light leading-normal">{{ $rule->gejala->nama_gejala }}</p>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex justify-end gap-3 border-t pt-2 mt-0.5">
-                    <a href="{{ route('admin.rules.edit', $rule->id) }}" class="text-neutral-400 hover:text-[#0E4E37] text-xs font-bold flex items-center gap-1 transition">
-                        Edit
-                    </a>
-                    <form action="{{ route('admin.rules.delete', $rule->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus rule ini?')">
-                        @csrf
-                        <button type="submit" class="text-red-400 hover:text-red-600 text-xs font-bold transition">
-                            Hapus
-                        </button>
-                    </form>
-                </div>
             </div>
         @endforeach
     </div>
 </div>
+<script>
+const btnGejala = document.getElementById('btn-gejala');
+const btnTarget = document.getElementById('btn-target');
+const btnRule = document.getElementById('btn-rule');
+
+const sectionGejala = document.getElementById('section-gejala');
+const sectionTarget = document.getElementById('section-target');
+const sectionRule = document.getElementById('section-rule');
+
+function aktifkan(button){
+    [btnGejala, btnTarget, btnRule].forEach(btn=>{
+        btn.style.backgroundColor="white";
+        btn.style.color="#525252";
+        btn.style.border="1px solid #e5e5e5";
+    });
+
+    button.style.backgroundColor="#0E4E37";
+    button.style.color="white";
+    button.style.border="none";
+}
+
+function showSection(section,button){
+
+    sectionGejala.classList.add("hidden");
+    sectionTarget.classList.add("hidden");
+    sectionRule.classList.add("hidden");
+
+    section.classList.remove("hidden");
+
+    aktifkan(button);
+}
+
+btnGejala.addEventListener("click",()=>{
+    showSection(sectionGejala,btnGejala);
+});
+
+btnTarget.addEventListener("click",()=>{
+    showSection(sectionTarget,btnTarget);
+});
+
+btnRule.addEventListener("click",()=>{
+    showSection(sectionRule,btnRule);
+});
+
+showSection(sectionGejala,btnGejala);
+</script>
 @endsection

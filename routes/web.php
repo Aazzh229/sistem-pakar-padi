@@ -14,6 +14,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/admin/search/gejala',[AdminController::class,'searchGejala']);
+Route::get('/admin/search/diagnosa',[AdminController::class,'searchDiagnosa']);
+Route::get('/admin/search/penyakit',[AdminController::class,'searchPenyakit']);
+Route::get('/admin/search/hama',[AdminController::class,'searchHama']);
 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
@@ -69,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
         Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::post('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
         
         // CRUD Rules
         Route::get('/rules', [AdminController::class, 'indexRules'])->name('rules.index');

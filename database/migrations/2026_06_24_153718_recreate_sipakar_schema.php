@@ -27,23 +27,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 3. Re-create penyakit table
-        Schema::create('penyakit', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_penyakit')->unique();
-            $table->string('nama_penyakit');
-            $table->string('slug')->unique();
-            $table->timestamps();
-        });
 
-        // 4. Re-create hama table
-        Schema::create('hama', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_hama')->unique();
-            $table->string('nama_hama');
-            $table->string('slug')->unique();
-            $table->timestamps();
-        });
 
         // 5. Re-create rules table
         Schema::create('rules', function (Blueprint $table) {

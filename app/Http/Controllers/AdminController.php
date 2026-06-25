@@ -26,6 +26,40 @@ class AdminController extends Controller
     }
 
     // ================== USER MANAGEMENT ==================
+    public function searchGejala(Request $request)
+    {
+        return Gejala::where('nama_gejala','like','%'.$request->q.'%')
+            ->limit(5)
+            ->get();
+    }
+
+    public function searchTarget(Request $request)
+{
+    if ($request->type == 'penyakit') {
+        return Penyakit::where('nama_penyakit', 'like', '%' . $request->q . '%')
+            ->limit(5)
+            ->get();
+    }
+
+    return Hama::where('nama_hama', 'like', '%' . $request->q . '%')
+        ->limit(5)
+        ->get();
+}
+
+public function searchPenyakit(Request $request)
+{
+    return Penyakit::where('nama_penyakit','like','%'.$request->q.'%')
+        ->limit(5)
+        ->get();
+}
+
+public function searchHama(Request $request)
+{
+    return Hama::where('nama_hama','like','%'.$request->q.'%')
+        ->limit(5)
+        ->get();
+}
+
     public function indexUsers()
     {
         $users = User::orderBy('name')->get();
@@ -93,11 +127,39 @@ class AdminController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui.');
     }
 
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Prevent admin from deactivating their own account
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat mengubah status akun Anda sendiri.');
+        }
+
+        $newStatus = $user->status === 'active' ? 'inactive' : 'active';
+        $user->update(['status' => $newStatus]);
+
+        $message = $newStatus === 'active'
+            ? "Akun {$user->name} berhasil diaktifkan."
+            : "Akun {$user->name} berhasil dinonaktifkan.";
+
+        return redirect()->route('admin.users.index')->with('success', $message);
+    }
+
     // ================== RULES MANAGEMENT ==================
     public function indexRules()
     {
-        $rules = Rule::with(['gejala', 'target'])->get();
-        return view('admin.rules.index', compact('rules'));
+        $rules = Rule::with(['gejala','target'])->get();
+        $gejala = Gejala::all();
+        $penyakit = Penyakit::all();
+        $hama = Hama::all();
+
+        return view('admin.rules.index', compact(
+            'rules',
+            'gejala',
+            'penyakit',
+            'hama'
+        ));
     }
 
     public function createRule()
