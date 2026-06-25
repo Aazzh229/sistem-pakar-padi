@@ -141,14 +141,8 @@
                         <!-- CF Pakar -->
                         <div class="flex items-center gap-2">
                             <label class="text-[10px] font-bold text-neutral-500 w-20 flex-shrink-0">CF Pakar:</label>
-                            <select name="symptom_rows[0][cf]"
-                                    class="flex-1 bg-white border border-neutral-200 text-xs rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
-                                <option value="0.2">0.2 – Tidak Yakin</option>
-                                <option value="0.4">0.4 – Sedikit Yakin</option>
-                                <option value="0.6">0.6 – Cukup Yakin</option>
-                                <option value="0.8" selected>0.8 – Yakin</option>
-                                <option value="1.0">1.0 – Sangat Yakin</option>
-                            </select>
+                            <input type="number" step="0.1" min="0.1" max="1.0" name="symptom_rows[0][cf]" value="0.8" required
+                                   class="flex-1 bg-white border border-neutral-200 text-xs rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
                         </div>
                     </div>
                 </div>
@@ -316,14 +310,8 @@
             <!-- CF Pakar -->
             <div class="flex items-center gap-2">
                 <label class="text-[10px] font-bold text-neutral-500 w-20 flex-shrink-0">CF Pakar:</label>
-                <select name="symptom_rows[${currentIdx}][cf]"
-                        class="flex-1 bg-white border border-neutral-200 text-xs rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
-                    <option value="0.2">0.2 – Tidak Yakin</option>
-                    <option value="0.4">0.4 – Sedikit Yakin</option>
-                    <option value="0.6">0.6 – Cukup Yakin</option>
-                    <option value="0.8" selected>0.8 – Yakin</option>
-                    <option value="1.0">1.0 – Sangat Yakin</option>
-                </select>
+                <input type="number" step="0.1" min="0.1" max="1.0" name="symptom_rows[${currentIdx}][cf]" value="0.8" required
+                       class="flex-1 bg-white border border-neutral-200 text-xs rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[#0E4E37]">
             </div>
         `;
 
