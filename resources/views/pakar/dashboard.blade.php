@@ -54,8 +54,8 @@
             </svg>
         </a>
 
-        <!-- Menu: Tambah Gejala Baru -->
-        <a href="{{ route('pakar.gejala.create') }}" class="bg-white p-5 rounded-2xl border border-neutral-100 shadow-md flex items-center justify-between hover:bg-neutral-50 transition">
+        <!-- Menu: Tambah Gejala / Hama / Penyakit Baru -->
+        <a href="{{ route('pakar.master.create') }}" class="bg-white p-5 rounded-2xl border border-neutral-100 shadow-md flex items-center justify-between hover:bg-neutral-50 transition">
             <div class="flex items-center gap-3">
                 <div class="bg-blue-50 text-blue-700 p-2.5 rounded-xl">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -63,44 +63,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-neutral-800 text-sm">2. Input Gejala Baru</h3>
-                    <p class="text-[10px] text-neutral-400 font-light mt-0.5 leading-snug">Tambahkan data gejala baru di luar basis pengetahuan lama</p>
-                </div>
-            </div>
-            <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </a>
-
-        <!-- Menu: Tambah Penyakit Baru -->
-        <a href="{{ route('pakar.penyakit.create') }}" class="bg-white p-5 rounded-2xl border border-neutral-100 shadow-md flex items-center justify-between hover:bg-neutral-50 transition">
-            <div class="flex items-center gap-3">
-                <div class="bg-amber-50 text-amber-700 p-2.5 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-sm">3. Input Penyakit Baru</h3>
-                    <p class="text-[10px] text-neutral-400 font-light mt-0.5 leading-snug">Tambahkan data penyakit baru di luar basis pengetahuan lama</p>
-                </div>
-            </div>
-            <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </a>
-
-        <!-- Menu: Tambah Hama Baru -->
-        <a href="{{ route('pakar.hama.create') }}" class="bg-white p-5 rounded-2xl border border-neutral-100 shadow-md flex items-center justify-between hover:bg-neutral-50 transition">
-            <div class="flex items-center gap-3">
-                <div class="bg-orange-50 text-orange-700 p-2.5 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-neutral-800 text-sm">4. Input Hama Baru</h3>
-                    <p class="text-[10px] text-neutral-400 font-light mt-0.5 leading-snug">Tambahkan data hama baru di luar basis pengetahuan lama</p>
+                    <h3 class="font-bold text-neutral-800 text-sm">2. Input Data Master Baru</h3>
+                    <p class="text-[10px] text-neutral-400 font-light mt-0.5 leading-snug">Tambahkan data Gejala, Penyakit, atau Hama baru ke dalam sistem</p>
                 </div>
             </div>
             <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +82,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-neutral-800 text-sm">5. Input Library (Ensiklopedia)</h3>
+                    <h3 class="font-bold text-neutral-800 text-sm">3. Input Library (Ensiklopedia)</h3>
                     <p class="text-[10px] text-neutral-400 font-light mt-0.5 leading-snug">Tambahkan artikel edukasi hama & penyakit baru</p>
                 </div>
             </div>

@@ -190,7 +190,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Jamur Pyricularia oryzae',
                 'solusi' => 'Gunakan varietas tahan penyakit, kurangi pemakaian pupuk nitrogen berlebih, dan semprot fungisida.',
                 'pencegahan' => 'Pengaturan jarak tanam legowo dan pembersihan sisa-sisa jerami padi.',
-                'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://agrokomplekskita.com/wp-content/uploads/2019/02/gejala-padi-kena-blas.jpg'
             ],
             [
                 'jenis' => 'penyakit',
@@ -200,7 +200,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Virus Tungro (RTBV dan RTSV) ditularkan oleh Wereng Hijau',
                 'solusi' => 'Kendalikan vektor wereng hijau dengan insektisida sistemik dan cabut tanaman sakit.',
                 'pencegahan' => 'Tanam serempak untuk memutus siklus hidup wereng hijau.',
-                'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://www.kampustani.com/wp-content/uploads/2022/07/cara-mengatasi-penyakit-tungro-pada-padi.jpg'
             ],
             [
                 'jenis' => 'penyakit',
@@ -208,9 +208,9 @@ class SipakarDatabaseSeeder extends Seeder
                 'nama_latin' => 'Xanthomonas oryzae pv. oryzae',
                 'deskripsi' => 'Penyakit bakteri menyerang daun padi, ditandai garis basah kekuningan yang mengering.',
                 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae',
-                'solusi' => 'Kurangi pengairan berlebih, hindari pupuk N berlebih, dan semprot bakterisida.',
+                'solusi' => 'Kurangi pengairan berlebih, hindari pupuk N berlebih, and semprot bakterisida.',
                 'pencegahan' => 'Gunakan varietas tahan seperti Inpari dan pengairan berselang.',
-                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://content.peat-cloud.com/thumbnails/bacterial-blight-of-rice-rice-1581498605.jpg'
             ],
             [
                 'jenis' => 'penyakit',
@@ -220,7 +220,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Jamur Helminthosporium oryzae / Bipolaris oryzae',
                 'solusi' => 'Berikan pupuk kalium cukup, pemupukan berimbang, dan fungisida.',
                 'pencegahan' => 'Perbaiki drainase tanah dan gunakan benih bebas patogen.',
-                'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'http://www.knowledgebank.irri.org/images/stories/brown-spot-3.jpg'
             ],
             [
                 'jenis' => 'penyakit',
@@ -230,7 +230,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Jamur Rhizoctonia solani',
                 'solusi' => 'Kurangi pupuk N berlebih, perbaiki drainase sawah, dan semprot fungisida.',
                 'pencegahan' => 'Lakukan sanitasi gulma di sekitar sawah dan atur jarak tanam.',
-                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://content.peat-cloud.com/thumbnails/sheath-rot-of-rice-rice-1553620104.jpg'
             ],
             [
                 'jenis' => 'hama',
@@ -240,7 +240,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Tikus Sawah (Rattus argentiventer)',
                 'solusi' => 'Gropyokan massal, pasang Trap Barrier System (TBS), dan rodentisida.',
                 'pencegahan' => 'Pembersihan pematang dan tanggul sawah agar tidak jadi sarang.',
-                'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://agrokomplekskita.com/wp-content/uploads/2017/04/tikus.jpg'
             ],
             [
                 'jenis' => 'hama',
@@ -250,7 +250,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)',
                 'solusi' => 'Gunakan agens hayati, semprot insektisida pymetrozine jika populasi tinggi.',
                 'pencegahan' => 'Jarak tanam legowo dan hindari insektisida spektrum luas di awal musim.',
-                'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://diperpa.badungkab.go.id/storage/diperpa/image/section-2-mobile-key-visual-kontrol-wereng-coklat.jpg'
             ],
             [
                 'jenis' => 'hama',
@@ -260,7 +260,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Ulat Penggerek Batang Padi (Scirpophaga spp.)',
                 'solusi' => 'Kumpulkan kelompok telur, gunakan light trap, dan insektisida sistemik.',
                 'pencegahan' => 'Tanam serempak dan pembajakan tanah pasca panen.',
-                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://gkmdblog.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/06/10101855/Blog-Penggerek-Batang-Padi.jpeg'
             ],
             [
                 'jenis' => 'hama',
@@ -270,7 +270,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Keong Mas (Pomacea canaliculata)',
                 'solusi' => 'Kumpulkan keong manual, atur pintu air, atau taburkan moluskisida.',
                 'pencegahan' => 'Pasang saringan kawat pada pintu air irigasi masuk sawah.',
-                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://katalogcba.com/wp-content/uploads/2021/10/keong-mas.jpeg'
             ],
             [
                 'jenis' => 'hama',
@@ -280,7 +280,7 @@ class SipakarDatabaseSeeder extends Seeder
                 'penyebab' => 'Walang Sangit (Leptocorisa oratorius)',
                 'solusi' => 'Semprot insektisida kontak di pagi/sore hari saat serangga aktif.',
                 'pencegahan' => 'Sanitasi gulma pematang sawah yang menjadi inang alternatif.',
-                'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400&auto=format&fit=crop&q=80'
+                'gambar' => 'https://gkmdblog.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/12/14162626/Blog-banner-_-Inilah-Cara-Efektif-dalam-Pengendalian-Hama-Walang-Sangit-.jpg'
             ]
         ];
 
@@ -319,21 +319,21 @@ class SipakarDatabaseSeeder extends Seeder
                     
                     // Mapping Excel rows
                     $excelMapping = [
-                        'Penyakit Blast Daun' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400'],
-                        'Penyakit Blast Leher (Neck Blast)' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400'],
-                        'Hama Tikus' => ['jenis' => 'hama', 'nama' => 'Tikus Sawah', 'nama_latin' => 'Rattus argentiventer', 'penyebab' => 'Tikus Sawah (Rattus argentiventer)', 'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400'],
-                        'Hama Wereng Coklat' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
-                        'Penyakit Tungro' => ['jenis' => 'penyakit', 'nama' => 'Tungro', 'nama_latin' => 'Rice tungro virus', 'penyebab' => 'Virus Tungro (RTBV dan RTSV)', 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400'],
-                        'Hama Sundep (Penggerek Batang Fase Vegetatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
-                        'Hama Beluk (Penggerek Batang Fase Generatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
-                        'Hama Keong Mas' => ['jenis' => 'hama', 'nama' => 'Keong Mas', 'nama_latin' => 'Pomacea canaliculata', 'penyebab' => 'Keong Mas (Pomacea canaliculata)', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
-                        'Hawar Daun Bakteri (HDB) / Kresek' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
-                        'Hama Putih / Ulat Daun' => ['jenis' => 'hama', 'nama' => 'Hama Putih / Ulat Daun', 'nama_latin' => 'Nymphula depunctalis', 'penyebab' => 'Ulat daun / Hama putih (Nymphula depunctalis)', 'gambar' => 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?w=400'],
-                        'Hama Walang Sangit' => ['jenis' => 'hama', 'nama' => 'Walang Sangit', 'nama_latin' => 'Leptocorisa oratorius', 'penyebab' => 'Walang Sangit (Leptocorisa oratorius)', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
-                        'Penyakit Bercak Coklat' => ['jenis' => 'penyakit', 'nama' => 'Bercak Coklat', 'nama_latin' => 'Bipolaris oryzae', 'penyebab' => 'Jamur Bipolaris oryzae', 'gambar' => 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=400'],
-                        'Hama Ganjur' => ['jenis' => 'hama', 'nama' => 'Hama Ganjur', 'nama_latin' => 'Orseolia oryzae', 'penyebab' => 'Tabuhan Ganjur (Orseolia oryzae)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
-                        'Serangan Hama Wereng Berat (Puso)' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://images.unsplash.com/photo-1508849789987-4e5333c12b78?w=400'],
-                        'HDB Fase Lanjut' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?w=400'],
+                        'Penyakit Blast Daun' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://agrokomplekskita.com/wp-content/uploads/2019/02/gejala-padi-kena-blas.jpg'],
+                        'Penyakit Blast Leher (Neck Blast)' => ['jenis' => 'penyakit', 'nama' => 'Blast Padi', 'nama_latin' => 'Pyricularia oryzae', 'penyebab' => 'Jamur Pyricularia oryzae', 'gambar' => 'https://agrokomplekskita.com/wp-content/uploads/2019/02/gejala-padi-kena-blas.jpg'],
+                        'Hama Tikus' => ['jenis' => 'hama', 'nama' => 'Tikus Sawah', 'nama_latin' => 'Rattus argentiventer', 'penyebab' => 'Tikus Sawah (Rattus argentiventer)', 'gambar' => 'https://agrokomplekskita.com/wp-content/uploads/2017/04/tikus.jpg'],
+                        'Hama Wereng Coklat' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://diperpa.badungkab.go.id/storage/diperpa/image/section-2-mobile-key-visual-kontrol-wereng-coklat.jpg'],
+                        'Penyakit Tungro' => ['jenis' => 'penyakit', 'nama' => 'Tungro', 'nama_latin' => 'Rice tungro virus', 'penyebab' => 'Virus Tungro (RTBV dan RTSV)', 'gambar' => 'https://www.kampustani.com/wp-content/uploads/2022/07/cara-mengatasi-penyakit-tungro-pada-padi.jpg'],
+                        'Hama Sundep (Penggerek Batang Fase Vegetatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://gkmdblog.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/06/10101855/Blog-Penggerek-Batang-Padi.jpeg'],
+                        'Hama Beluk (Penggerek Batang Fase Generatif)' => ['jenis' => 'hama', 'nama' => 'Penggerek Batang', 'nama_latin' => 'Scirpophaga innotata', 'penyebab' => 'Ulat Penggerek Batang Padi', 'gambar' => 'https://gkmdblog.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/06/10101855/Blog-Penggerek-Batang-Padi.jpeg'],
+                        'Hama Keong Mas' => ['jenis' => 'hama', 'nama' => 'Keong Mas', 'nama_latin' => 'Pomacea canaliculata', 'penyebab' => 'Keong Mas (Pomacea canaliculata)', 'gambar' => 'https://katalogcba.com/wp-content/uploads/2021/10/keong-mas.jpeg'],
+                        'Hawar Daun Bakteri (HDB) / Kresek' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://content.peat-cloud.com/thumbnails/bacterial-blight-of-rice-rice-1581498605.jpg'],
+                        'Hama Putih / Ulat Daun' => ['jenis' => 'hama', 'nama' => 'Hama Putih / Ulat Daun', 'nama_latin' => 'Nymphula depunctalis', 'penyebab' => 'Ulat daun / Hama putih (Nymphula depunctalis)', 'gambar' => 'https://portal.merauke.go.id/api/serve-uploads/images/Foto-ilustrasi.jpeg'],
+                        'Hama Walang Sangit' => ['jenis' => 'hama', 'nama' => 'Walang Sangit', 'nama_latin' => 'Leptocorisa oratorius', 'penyebab' => 'Walang Sangit (Leptocorisa oratorius)', 'gambar' => 'https://gkmdblog.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/12/14162626/Blog-banner-_-Inilah-Cara-Efektif-dalam-Pengendalian-Hama-Walang-Sangit-.jpg'],
+                        'Penyakit Bercak Coklat' => ['jenis' => 'penyakit', 'nama' => 'Bercak Coklat', 'nama_latin' => 'Bipolaris oryzae', 'penyebab' => 'Jamur Bipolaris oryzae', 'gambar' => 'http://www.knowledgebank.irri.org/images/stories/brown-spot-3.jpg'],
+                        'Hama Ganjur' => ['jenis' => 'hama', 'nama' => 'Hama Ganjur', 'nama_latin' => 'Orseolia oryzae', 'penyebab' => 'Tabuhan Ganjur (Orseolia oryzae)', 'gambar' => 'https://assets.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/p2/23/2023/09/28/Foto-Berita-Website-CariAku-2023-09-28T151609660-3551889010.png'],
+                        'Serangan Hama Wereng Berat (Puso)' => ['jenis' => 'hama', 'nama' => 'Wereng Coklat', 'nama_latin' => 'Nilaparvata lugens', 'penyebab' => 'Wereng Batang Coklat (Nilaparvata lugens)', 'gambar' => 'https://diperpa.badungkab.go.id/storage/diperpa/image/section-2-mobile-key-visual-kontrol-wereng-coklat.jpg'],
+                        'HDB Fase Lanjut' => ['jenis' => 'penyakit', 'nama' => 'Hawar Daun Bakteri', 'nama_latin' => 'Xanthomonas oryzae pv. oryzae', 'penyebab' => 'Bakteri Xanthomonas oryzae pv. oryzae', 'gambar' => 'https://content.peat-cloud.com/thumbnails/bacterial-blight-of-rice-rice-1581498605.jpg'],
                     ];
 
                     foreach ($xmlSheet->sheetData->row as $row) {

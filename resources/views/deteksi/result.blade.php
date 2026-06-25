@@ -6,7 +6,15 @@
 <div class="flex flex-col w-full text-neutral-800">
     <!-- Header -->
     <div class="bg-gradient-to-b from-[#0A3D2A] to-[#1C6646] px-6 pt-8 pb-10 text-white relative">
-        <h1 class="text-2xl font-bold">Hasil Diagnosa</h1>
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold">Hasil Diagnosa</h1>
+            @if(Auth::check() && (Auth::user()->role === 'pakar' || Auth::user()->role === 'admin'))
+                <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('pakar.dashboard') }}" 
+                   class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold px-3 py-1.5 rounded-full transition">
+                    Dashboard
+                </a>
+            @endif
+        </div>
         <p class="text-white/80 text-xs mt-1.5 font-light">
             Berdasarkan hasil analisa Certainty Factor (CF) dari gejala yang Anda masukkan.
         </p>
@@ -21,14 +29,18 @@
                     @if($cf > 0)
                         @php
                             $gejala = \App\Models\Gejala::find($id);
-                            $cfText = match((string)$cf) {
-                                '0.2' => 'Tidak Yakin',
-                                '0.4' => 'Sedikit Yakin',
-                                '0.6' => 'Cukup Yakin',
-                                '0.8' => 'Yakin',
-                                '1.0' => 'Sangat Yakin',
-                                default => 'Yakin'
-                            };
+                            $cfVal = (float)$cf;
+                            if ($cfVal >= 1.0) {
+                                $cfText = 'Sangat Yakin';
+                            } elseif ($cfVal >= 0.8) {
+                                $cfText = 'Yakin';
+                            } elseif ($cfVal >= 0.6) {
+                                $cfText = 'Cukup Yakin';
+                            } elseif ($cfVal >= 0.4) {
+                                $cfText = 'Sedikit Yakin';
+                            } else {
+                                $cfText = 'Tidak Yakin';
+                            }
                         @endphp
                         @if($gejala)
                             <li class="flex items-start gap-2">
