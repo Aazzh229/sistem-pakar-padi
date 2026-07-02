@@ -27,23 +27,48 @@
             Daftar lengkap penyakit dan hama padi beserta cara pencegahan dan solusinya.
         </p>
 
-        <!-- Search Form -->
-        <form action="{{ route('ensiklopedia.index') }}" method="GET" class="relative w-full">
-            @if($type)
-                <input type="hidden" name="type" value="{{ $type }}">
-            @endif
-            <span class="absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </span>
-            <input type="text" 
-                   name="search" 
-                   value="{{ $search }}"
-                   placeholder="Cari penyakit atau hama..." 
-                   class="w-full bg-white/15 border border-white/10 text-white placeholder-white/60 text-sm rounded-full py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/20 transition shadow-sm"
-            >
-        </form>
+        <!-- Search Form with Live Suggestions -->
+        <div class="relative w-full" id="search-container">
+            <form action="{{ route('ensiklopedia.index') }}" method="GET" id="search-form" autocomplete="off">
+                @if($type)
+                    <input type="hidden" name="type" value="{{ $type }}">
+                @endif
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 z-10">
+                    <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </span>
+                <input type="text" 
+                       name="search" 
+                       id="search-input"
+                       value="{{ $search }}"
+                       placeholder="Cari penyakit atau hama..." 
+                       class="w-full bg-white/15 border border-white/10 text-white placeholder-white/60 text-sm rounded-full py-3.5 pl-11 pr-10 focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/20 transition shadow-sm"
+                >
+                <!-- Clear Button -->
+                <button type="button" id="search-clear" 
+                        class="absolute inset-y-0 right-0 flex items-center pr-4 z-10 {{ $search ? '' : 'hidden' }}"
+                        onclick="document.getElementById('search-input').value=''; this.classList.add('hidden'); document.getElementById('suggestions-dropdown').classList.add('hidden');">
+                    <svg class="w-4 h-4 text-white/50 hover:text-white/80 transition" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Suggestions Dropdown -->
+            <div id="suggestions-dropdown" 
+                 class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border border-neutral-100 overflow-hidden z-50 max-h-[320px] overflow-y-auto">
+                <div id="suggestions-list"></div>
+                <div id="suggestions-loading" class="hidden p-4 text-center">
+                    <div class="inline-flex items-center gap-2 text-xs text-neutral-400">
+                        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Mencari...
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Category Tabs -->
@@ -125,6 +150,154 @@
         @endforelse
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const dropdown = document.getElementById('suggestions-dropdown');
+    const suggestionsList = document.getElementById('suggestions-list');
+    const loadingEl = document.getElementById('suggestions-loading');
+    const clearBtn = document.getElementById('search-clear');
+    const container = document.getElementById('search-container');
+    
+    let debounceTimer = null;
+    let activeIndex = -1;
+    let currentSuggestions = [];
+
+    const suggestionsUrl = @json(route('ensiklopedia.suggestions'));
+    const showUrlTemplate = "{{ route('ensiklopedia.show', '__SLUG__') }}";
+
+    function buildSuggestionItem(item, index) {
+        const isPenyakit = item.jenis === 'penyakit';
+        const badgeBg = isPenyakit ? '#E2F2EB' : '#FDECE8';
+        const badgeColor = isPenyakit ? '#0A3D2A' : '#D85C30';
+        const badgeText = isPenyakit ? 'Penyakit' : 'Hama';
+        const latin = item.nama_latin ? '<span style="font-size:10px;color:#9ca3af;font-style:italic;margin-left:6px;">' + item.nama_latin + '</span>' : '';
+        const url = showUrlTemplate.replace('__SLUG__', item.slug);
+        
+        return '<a href="' + url + '" ' +
+               'class="suggestion-item flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors cursor-pointer border-b border-neutral-50 last:border-b-0" ' +
+               'data-index="' + index + '">' +
+               '<div class="flex-shrink-0">' +
+               '<svg class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>' +
+               '</div>' +
+               '<div class="flex-grow min-w-0">' +
+               '<div class="flex items-center gap-1.5 flex-wrap">' +
+               '<span style="display:inline-block;background:' + badgeBg + ';color:' + badgeColor + ';font-size:9px;font-weight:700;padding:2px 6px;border-radius:9999px;">' + badgeText + '</span>' +
+               '<span class="text-sm font-semibold text-neutral-800 truncate">' + item.nama + '</span>' +
+               latin +
+               '</div></div>' +
+               '<svg class="w-3.5 h-3.5 text-neutral-300 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>' +
+               '</a>';
+    }
+
+    function showSuggestions(items) {
+        currentSuggestions = items;
+        activeIndex = -1;
+
+        if (items.length === 0) {
+            suggestionsList.innerHTML = '<div class="px-4 py-4 text-center"><p class="text-xs text-neutral-400 font-medium">Tidak ditemukan hasil untuk pencarian ini</p></div>';
+        } else {
+            let html = '';
+            for (let i = 0; i < items.length; i++) {
+                html += buildSuggestionItem(items[i], i);
+            }
+            suggestionsList.innerHTML = html;
+        }
+
+        loadingEl.classList.add('hidden');
+        dropdown.classList.remove('hidden');
+    }
+
+    function hideSuggestions() {
+        setTimeout(function() {
+            dropdown.classList.add('hidden');
+        }, 200);
+    }
+
+    function highlightItem(index) {
+        const items = dropdown.querySelectorAll('.suggestion-item');
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.remove('bg-neutral-50');
+        }
+        
+        if (index >= 0 && index < items.length) {
+            items[index].classList.add('bg-neutral-50');
+            items[index].scrollIntoView({ block: 'nearest' });
+        }
+        activeIndex = index;
+    }
+
+    function fetchSuggestions(query) {
+        loadingEl.classList.remove('hidden');
+        suggestionsList.innerHTML = '';
+        dropdown.classList.remove('hidden');
+
+        fetch(suggestionsUrl + '?q=' + encodeURIComponent(query), {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) { showSuggestions(data); })
+        .catch(function() {
+            loadingEl.classList.add('hidden');
+            dropdown.classList.add('hidden');
+        });
+    }
+
+    searchInput.addEventListener('input', function() {
+        const val = this.value.trim();
+        
+        if (val.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+
+        clearTimeout(debounceTimer);
+
+        if (val.length < 1) {
+            dropdown.classList.add('hidden');
+            return;
+        }
+
+        debounceTimer = setTimeout(function() { fetchSuggestions(val); }, 250);
+    });
+
+    searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length >= 1 && currentSuggestions.length > 0) {
+            dropdown.classList.remove('hidden');
+        }
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+        const items = dropdown.querySelectorAll('.suggestion-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            highlightItem(Math.min(activeIndex + 1, items.length - 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            highlightItem(Math.max(activeIndex - 1, 0));
+        } else if (e.key === 'Enter' && activeIndex >= 0) {
+            e.preventDefault();
+            items[activeIndex].click();
+        } else if (e.key === 'Escape') {
+            hideSuggestions();
+            searchInput.blur();
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!container.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+});
+</script>
 @endsection
 
 @section('navigation')

@@ -182,9 +182,12 @@ class AdaptiveDetectionService
                 ->where('nama', $data['name'])
                 ->first();
 
+            // Use Library name slug for ensiklopedia link (Library.nama may differ from Penyakit/Hama name)
+            $ensiklopediaSlug = $library ? Str::slug($library->nama) : $data['slug'];
+
             $results[] = [
                 'name' => $data['name'],
-                'slug' => $data['slug'],
+                'slug' => $ensiklopediaSlug,
                 'type' => $data['target_type'],
                 'cf' => $cfCombine,
                 'percentage' => round($cfCombine * 100, 2),

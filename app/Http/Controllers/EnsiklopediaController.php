@@ -39,8 +39,23 @@ class EnsiklopediaController extends Controller
 
     public function show($slug)
     {
+        // Primary: match by Library.nama slug
         $all = Library::all();
         $item = $all->first(fn($i) => Str::slug($i->nama) === $slug);
+
+        // Fallback: if not found, try matching via Penyakit/Hama slug columns
+        if (!$item) {
+            $penyakit = \App\Models\Penyakit::where('slug', $slug)->first();
+            if ($penyakit) {
+                $item = Library::where('jenis', 'penyakit')->where('nama', $penyakit->nama_penyakit)->first();
+            }
+        }
+        if (!$item) {
+            $hama = \App\Models\Hama::where('slug', $slug)->first();
+            if ($hama) {
+                $item = Library::where('jenis', 'hama')->where('nama', $hama->nama_hama)->first();
+            }
+        }
 
         if (!$item) {
             abort(404);
@@ -65,5 +80,32 @@ class EnsiklopediaController extends Controller
         }
 
         return view('ensiklopedia.show', compact('item', 'symptoms'));
+    }
+
+    /**
+     * Return JSON search suggestions for live autocomplete.
+     */
+    public function suggestions(Request $request)
+    {
+        $q = $request->input('q', '');
+        
+        if (strlen($q) < 1) {
+            return response()->json([]);
+        }
+
+        $items = Library::where('nama', 'like', "%{$q}%")
+            ->orWhere('nama_latin', 'like', "%{$q}%")
+            ->orderBy('nama')
+            ->limit(8)
+            ->get(['nama', 'jenis', 'nama_latin']);
+
+        $suggestions = $items->map(fn($item) => [
+            'nama' => $item->nama,
+            'jenis' => $item->jenis,
+            'nama_latin' => $item->nama_latin,
+            'slug' => Str::slug($item->nama),
+        ]);
+
+        return response()->json($suggestions);
     }
 }

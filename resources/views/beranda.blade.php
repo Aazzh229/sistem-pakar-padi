@@ -50,19 +50,7 @@
             Identifikasi hama dan penyakit tanaman padi secara akurat menggunakan sistem pakar berbasis gejala.
         </p>
 
-        <!-- Search Bar -->
-        <div class="relative w-full">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-4">
-                <!-- Search Icon -->
-                <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </span>
-            <input type="text" 
-                   placeholder="Cari penyakit atau hama..." 
-                   class="w-full bg-white/15 border border-white/10 text-white placeholder-white/60 text-sm rounded-full py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/20 transition-all duration-200 shadow-sm"
-            >
-        </div>
+
     </div>
 
     <!-- STATS CARD (Floating Overlap) -->

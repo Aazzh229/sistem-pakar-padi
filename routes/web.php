@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
         
         // Ensiklopedia
         Route::get('/ensiklopedia', [EnsiklopediaController::class, 'index'])->name('ensiklopedia.index');
+        Route::get('/ensiklopedia/suggestions', [EnsiklopediaController::class, 'suggestions'])->name('ensiklopedia.suggestions');
         Route::get('/ensiklopedia/{slug}', [EnsiklopediaController::class, 'show'])->name('ensiklopedia.show');
         
         // Deteksi

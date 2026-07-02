@@ -151,7 +151,7 @@
 
                         <!-- Certainty Option (Expands when checked) -->
                         <div id="cf-container-{{ $g->id }}" class="hidden overflow-hidden border-t border-neutral-100 pt-3.5 flex flex-col gap-1.5">
-                            <label for="input-{{ $g->id }}" class="text-xs font-bold text-neutral-700">Bobot CF Pakar (0.1 s/d 1.0)</label>
+                            <label for="input-{{ $g->id }}" class="text-xs font-bold text-neutral-700">Tingkat Keyakinan Gejala (0.1 s/d 1.0)</label>
                             <input
                                 type="number"
                                 name="symptoms[{{ $g->id }}]"
@@ -159,6 +159,7 @@
                                 min="0.1"
                                 max="1.0"
                                 step="0.1"
+                                inputmode="decimal"
                                 value="0.8"
                                 disabled
                                 class="w-full bg-neutral-50 border border-neutral-200 text-sm rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#0E4E37] focus:bg-white transition-all symptom-cf-value"
@@ -199,6 +200,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let activeCategory = 'semua';
     let searchQuery = '';
+
+    function normalizeCfValue(input) {
+        const rawValue = input.value.trim();
+        const parsed = parseFloat(rawValue);
+        const min = 0.1;
+        const max = 1.0;
+
+        if (!rawValue || Number.isNaN(parsed)) {
+            input.value = '0.8';
+            return;
+        }
+
+        const clampedValue = Math.min(max, Math.max(min, parsed));
+        input.value = Number(clampedValue.toFixed(1)).toFixed(1);
+    }
 
     function showLimitPopup() {
         limitPopup.classList.remove('hidden');
@@ -332,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!input.value || input.value == "0") {
                     input.value = "0.8";
                 }
+                normalizeCfValue(input);
             } else {
                 // Hide container
                 container.classList.add('hidden');
@@ -339,6 +356,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.setAttribute('disabled', 'true');
             }
             updateState();
+        });
+    });
+
+    // Update CF badge as user types
+    document.querySelectorAll('.symptom-cf-value').forEach(input => {
+        input.addEventListener('input', function () {
+            normalizeCfValue(input);
+        });
+
+        input.addEventListener('change', function () {
+            normalizeCfValue(input);
         });
     });
 
@@ -350,10 +378,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 chk_{{ $sId }}.checked = true;
                 const container = document.getElementById('cf-container-{{ $sId }}');
                 const input = document.getElementById('input-{{ $sId }}');
-                
                 container.classList.remove('hidden');
                 input.removeAttribute('disabled');
                 input.value = "{{ $cfVal }}";
+                normalizeCfValue(input);
             }
         @endforeach
         updateState();

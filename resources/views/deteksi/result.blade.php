@@ -30,14 +30,10 @@
                         @php
                             $gejala = \App\Models\Gejala::find($id);
                             $cfVal = (float)$cf;
-                            if ($cfVal >= 1.0) {
+                            if ($cfVal >= 0.8) {
                                 $cfText = 'Sangat Yakin';
-                            } elseif ($cfVal >= 0.8) {
-                                $cfText = 'Yakin';
-                            } elseif ($cfVal >= 0.6) {
-                                $cfText = 'Cukup Yakin';
                             } elseif ($cfVal >= 0.4) {
-                                $cfText = 'Sedikit Yakin';
+                                $cfText = 'Yakin';
                             } else {
                                 $cfText = 'Tidak Yakin';
                             }
@@ -48,8 +44,8 @@
                                     {{ $gejala->kode_gejala }}
                                 </span>
                                 <span class="text-xs text-neutral-600 font-light">
-                                    {{ $gejala->nama_gejala }} 
-                                    <strong class="text-[#0E4E37] font-semibold">({{ $cfText }})</strong>
+                                    {{ $gejala->nama_gejala }}
+                                    <strong class="text-[#0E4E37] font-semibold">(CF {{ number_format($cfVal, 1) }} · {{ $cfText }})</strong>
                                 </span>
                             </li>
                         @endif

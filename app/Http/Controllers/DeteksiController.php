@@ -39,13 +39,18 @@ class DeteksiController extends Controller
 
     public function processStep(Request $request)
     {
+        $validated = $request->validate([
+            'symptoms' => 'nullable|array',
+            'symptoms.*' => 'nullable|numeric|min:0.1|max:1.0',
+        ]);
+
         $inputSymptoms = $request->input('symptoms', []);
         $selected = [];
 
         foreach ($inputSymptoms as $id => $cf) {
             $cfVal = (float)$cf;
             if ($cfVal > 0) {
-                $selected[$id] = $cfVal;
+                $selected[$id] = round(min(max($cfVal, 0.1), 1.0), 1);
             }
         }
 

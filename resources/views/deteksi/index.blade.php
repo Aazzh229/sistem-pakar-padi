@@ -21,7 +21,7 @@
     </div>
 
     <!-- Instruction Card -->
-    <div class="px-6 -mt-4 relative z-10">
+    <div class="px-6 -mt-4 relative z-10 flex flex-col gap-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg border border-neutral-100 flex flex-col items-center text-center">
             <!-- Icon -->
             <div class="bg-[#E2F2EB] text-[#0A3D2A] p-4 rounded-full mb-4">
@@ -38,21 +38,37 @@
             
             <h2 class="text-base font-bold text-neutral-800 mb-2">Petunjuk Diagnosa</h2>
             <p class="text-xs text-neutral-500 leading-relaxed font-light mb-6 max-w-xs">
-                Pilih 1 sampai 3 gejala yang paling tampak pada tanaman padi Anda, kemudian tentukan tingkat keyakinan Anda.
+                Pilih 1 sampai 3 gejala yang paling tampak pada tanaman padi Anda, lalu pilih tingkat keyakinan seberapa pasti Anda melihat gejala tersebut pada tanaman.
             </p>
 
-            <div class="w-full flex flex-col gap-3 text-left mb-6">
+            <div class="w-full flex flex-col gap-3 text-left mb-4">
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">1</span>
                     <p class="text-xs text-neutral-600 leading-normal font-light">Cari dan pilih 1 sampai 3 gejala pada daftar (bisa dicari atau difilter berdasarkan kategori).</p>
                 </div>
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">2</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Tentukan tingkat keyakinan (0.1 s/d 1.0) untuk masing-masing gejala yang dipilih.</p>
+                    <div class="flex flex-col gap-2">
+                        <p class="text-xs text-neutral-600 leading-normal font-light">Tentukan <strong>tingkat keyakinan</strong> untuk setiap gejala berdasarkan nilai CF berikut:</p>
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                            <div class="rounded-xl bg-[#FFF3E0] p-3 text-xs text-neutral-600 font-light">
+                                <div class="font-semibold text-neutral-800">0.1 – 0.3</div>
+                                <div>Tidak Yakin</div>
+                            </div>
+                            <div class="rounded-xl bg-[#E8F5E9] p-3 text-xs text-neutral-600 font-light">
+                                <div class="font-semibold text-neutral-800">0.4 – 0.7</div>
+                                <div>Yakin</div>
+                            </div>
+                            <div class="rounded-xl bg-[#E3F2FD] p-3 text-xs text-neutral-600 font-light">
+                                <div class="font-semibold text-neutral-800">0.8 – 1.0</div>
+                                <div>Sangat Yakin</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex gap-2.5 items-start">
                     <span class="w-5 h-5 bg-[#0E4E37] text-white rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0">3</span>
-                    <p class="text-xs text-neutral-600 leading-normal font-light">Tekan tombol "Mulai Analisa Diagnosa" untuk melihat hasil analisis Certainty Factor.</p>
+                    <p class="text-xs text-neutral-600 leading-normal font-light">Tekan tombol "Diagnosa" untuk melihat hasil analisis Certainty Factor.</p>
                 </div>
             </div>
 
